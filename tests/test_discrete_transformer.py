@@ -44,7 +44,7 @@ class TestDiscreteTransformerEncoding:
         transformer = DiscreteTransformer(num_v=10, num_s=1024, num_t=2, seed=42)
         transformer.set_value(5)
         transformer.execute(False)
-        output = transformer.output()
+        output = transformer.output.state()
         assert isinstance(output, BitArray)
         assert len(output) == 1024
 
@@ -53,7 +53,7 @@ class TestDiscreteTransformerEncoding:
         transformer = DiscreteTransformer(num_v=10, num_s=1024, num_t=2, seed=42)
         transformer.set_value(5)
         transformer.execute(False)
-        output = transformer.output()
+        output = transformer.output.state()
         # Should have exactly num_as active bits
         num_active = output.num_set()
         assert num_active == transformer.num_as()
@@ -66,12 +66,12 @@ class TestDiscreteTransformerEncoding:
         # Encode category 0
         transformer.set_value(0)
         transformer.execute(False)
-        output0 = transformer.output()
+        output0 = transformer.output.state()
 
         # Encode category 5
         transformer.set_value(5)
         transformer.execute(False)
-        output5 = transformer.output()
+        output5 = transformer.output.state()
 
         # Different categories should have zero overlap
         overlap = output0.num_similar(output5)
@@ -84,11 +84,11 @@ class TestDiscreteTransformerEncoding:
         # Encode category 3 twice
         transformer.set_value(3)
         transformer.execute(False)
-        output1 = transformer.output()
+        output1 = transformer.output.state()
 
         transformer.set_value(3)
         transformer.execute(False)
-        output2 = transformer.output()
+        output2 = transformer.output.state()
 
         # Same category should produce identical encoding
         assert output1.get_bits() == output2.get_bits()
@@ -154,7 +154,7 @@ class TestDiscreteTransformerOperations:
         transformer.clear()
 
         # After clear, output should be empty
-        output = transformer.output()
+        output = transformer.output.state()
         assert output.num_set() == 0
 
     def test_memory_usage(self) -> None:
@@ -189,7 +189,7 @@ class TestDiscreteTransformerIntegration:
         for category in range(num_categories):
             transformer.set_value(category)
             transformer.execute(False)
-            encodings.append(transformer.output())
+            encodings.append(transformer.output.state())
 
         # Check all pairs for zero overlap
         for i in range(num_categories):
@@ -207,7 +207,7 @@ class TestDiscreteTransformerIntegration:
         for category in categories:
             transformer.set_value(category)
             transformer.execute(False)
-            outputs.append(transformer.output())
+            outputs.append(transformer.output.state())
 
         # All outputs should be sparse with same sparsity
         sparsity = outputs[0].num_set()

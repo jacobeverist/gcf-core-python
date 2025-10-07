@@ -13,9 +13,9 @@ use std::rc::Rc;
 /// that have changed.
 #[pyclass(name = "BlockInput", module = "gnomics.core", unsendable)]
 pub struct PyBlockInput {
-    inner: RustBlockInput,
+    pub(crate) inner: RustBlockInput,
     // Keep Python references alive to prevent GC
-    py_children: Vec<Py<PyBlockOutput>>,
+    pub(crate) py_children: Vec<Py<PyBlockOutput>>,
 }
 
 #[pymethods]

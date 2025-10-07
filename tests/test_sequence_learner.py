@@ -91,7 +91,7 @@ class TestSequenceLearnerCompute:
         input_pattern.set_acts([1, 5, 10, 20, 30])
 
         learner.compute(input_pattern)
-        output = learner.output()
+        output = learner.output.state()
 
         assert isinstance(output, BitArray)
         assert len(output) == 800  # num_c * num_spc
@@ -116,13 +116,13 @@ class TestSequenceLearnerCompute:
         input1.set_acts([1, 2, 3])
 
         learner.compute(input1)
-        output1 = learner.output()
+        output1 = learner.output.state()
 
         input2 = BitArray(50)
         input2.set_acts([4, 5, 6])
 
         learner.compute(input2)
-        output2 = learner.output()
+        output2 = learner.output.state()
 
         # Both outputs should be valid
         assert len(output1) == len(output2)
@@ -176,7 +176,7 @@ class TestSequenceLearnerLearning:
         input_pattern.set_acts([1, 5, 10, 15, 20])
 
         learner.execute(input_pattern, learn_flag=True)
-        output = learner.output()
+        output = learner.output.state()
 
         assert isinstance(output, BitArray)
 
@@ -200,7 +200,7 @@ class TestSequenceLearnerLearning:
         input_pattern.set_acts([1, 5, 10])
 
         learner.execute(input_pattern, learn_flag=False)
-        output = learner.output()
+        output = learner.output.state()
 
         assert isinstance(output, BitArray)
 
@@ -447,7 +447,7 @@ class TestSequenceLearnerOperations:
         learner.clear()
 
         # After clear, output should be empty
-        output = learner.output()
+        output = learner.output.state()
         assert output.num_set() == 0
 
     def test_memory_usage(self) -> None:

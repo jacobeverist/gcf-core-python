@@ -72,7 +72,7 @@ class TestPatternPoolerCompute:
         input_pattern.set_acts([1, 5, 10, 20, 30, 40])
 
         pooler.compute(input_pattern)
-        output = pooler.output()
+        output = pooler.output.state()
 
         assert isinstance(output, BitArray)
         assert len(output) == 100
@@ -126,7 +126,7 @@ class TestPatternPoolerLearning:
         input_pattern.set_acts([1, 5, 10, 15, 20])
 
         pooler.execute(input_pattern, learn_flag=True)
-        output = pooler.output()
+        output = pooler.output.state()
 
         assert isinstance(output, BitArray)
 
@@ -190,7 +190,7 @@ class TestPatternPoolerOperations:
         pooler.clear()
 
         # After clear, output should be empty
-        output = pooler.output()
+        output = pooler.output.state()
         assert output.num_set() == 0
 
     def test_memory_usage(self) -> None:

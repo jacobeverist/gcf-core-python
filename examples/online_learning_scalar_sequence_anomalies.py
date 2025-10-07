@@ -2,17 +2,21 @@
 # online_learning_scalar_sequence_anomalies.py
 # ==============================================================================
 from gnomics import BitArray, ScalarTransformer, SequenceLearner
+from icecream import ic
 
 # Scalar Transformer
-transformer = ScalarTransformer(
-        min_val=0.0, max_val=100.0, num_s=1024, num_as=40, num_t=2, seed=42)
+transformer = ScalarTransformer( min_val=0.0, max_val=100.0, num_s=1024, num_as=40, num_t=2, seed=42)
 transformer.set_value(50.0)
 val = transformer.get_value() # 50.0
 transformer.execute(False)
-output = transformer.output()
+output = transformer.output.state()
 assert isinstance(output, BitArray)
 assert len(output) == 1024
 
+
+
+ic(output)
+print(output)
 
 learner = SequenceLearner(
         num_c=100,
@@ -27,14 +31,17 @@ learner = SequenceLearner(
         seed=42,
 )
 
+# Connect encoder to pooler
+learner.input.add_child(transformer.output, 0)
 learner.init(num_input_bits=100)
 
+"""
 input_pattern = BitArray(100)
 input_pattern.set_acts([1, 5, 10, 15, 20])
 
 learner.execute(input_pattern, learn_flag=True)
 score = learner.get_anomaly_score()
-output = learner.output()
+output = learner.output.state()
 
 
 # Create a simple sequence: A -> B -> C -> A
@@ -101,3 +108,4 @@ for i in range(len(values)):
 print("val, scr")
 for i in range(len(values)):
     print("%0.1f, %0.1f" % (values[i], scores[i]))
+"""

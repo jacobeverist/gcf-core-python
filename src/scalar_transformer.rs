@@ -1,8 +1,10 @@
 //! Python bindings for gnomics::ScalarTransformer
 
 use crate::bitarray::PyBitArray;
+use crate::block_output::PyBlockOutput;
 use gnomics::{Block, ScalarTransformer as RustScalarTransformer};
 use pyo3::prelude::*;
+use std::rc::Rc;
 
 /// Encodes continuous scalar values into sparse distributed representations.
 ///
@@ -69,11 +71,22 @@ impl PyScalarTransformer {
         self.inner.execute(learn_flag).map_err(crate::error::gnomics_error_to_pyerr)
     }
 
-    /// Get the output BitArray containing the encoded representation.
+    /// Get the output BlockOutput object for connecting to other blocks.
+    ///
+    /// Returns:
+    ///     BlockOutput that can be connected to other blocks' inputs
+    #[getter]
+    pub fn output(&self) -> PyBlockOutput {
+        PyBlockOutput {
+            inner: Rc::clone(&self.inner.output),
+        }
+    }
+
+    /// Get the current output state as a BitArray.
     ///
     /// Returns:
     ///     BitArray with sparse binary encoding of the scalar value
-    pub fn output(&self) -> PyBitArray {
+    pub fn get_output_state(&self) -> PyBitArray {
         PyBitArray::from_rust(self.inner.output.borrow().state.clone())
     }
 

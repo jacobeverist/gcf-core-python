@@ -9,6 +9,7 @@ directly from the Rust module. Use the factory functions for convenience.
 
 from gnomics.core import (
     BitArray,
+    BlockInput,
     BlockMemory,
     BlockOutput,
 )
@@ -284,6 +285,7 @@ def create_sequence_learner(
 
 __all__ = [
     "BitArray",
+    "BlockInput",
     "BlockOutput",
     "BlockMemory",
     "ScalarTransformer",

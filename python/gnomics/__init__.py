@@ -7,6 +7,7 @@ neuroscience framework for machine learning applications.
 
 from gnomics.core import (
     BitArray,
+    BlockInput,
     BlockMemory,
     BlockOutput,
     ContextLearner,
@@ -22,6 +23,7 @@ from gnomics.core import (
 __all__ = [
     "__version__",
     "BitArray",
+    "BlockInput",
     "BlockOutput",
     "BlockMemory",
     "ScalarTransformer",

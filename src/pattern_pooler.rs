@@ -1,8 +1,11 @@
 //! Python bindings for gnomics::PatternPooler
 
 use crate::bitarray::PyBitArray;
+use crate::block_input::PyBlockInput;
+use crate::block_output::PyBlockOutput;
 use gnomics::{Block, PatternPooler as RustPatternPooler};
 use pyo3::prelude::*;
+use std::rc::Rc;
 
 /// Unsupervised learning block for pattern recognition.
 ///
@@ -12,6 +15,8 @@ use pyo3::prelude::*;
 #[pyclass(name = "PatternPooler", module = "gnomics.core", unsendable)]
 pub struct PyPatternPooler {
     inner: RustPatternPooler,
+    // Python wrapper for input to track child references
+    py_input: Option<Py<PyBlockInput>>,
 }
 
 #[pymethods]
@@ -56,19 +61,66 @@ impl PyPatternPooler {
             num_t,
             seed,
         );
-        Ok(PyPatternPooler { inner: pooler })
+        Ok(PyPatternPooler {
+            inner: pooler,
+            py_input: None,
+        })
     }
 
-    /// Initialize the pooler with input size.
+    /// Get the BlockInput for connecting encoder outputs.
     ///
-    /// Must be called before using compute or learn methods.
+    /// Returns:
+    ///     BlockInput that can receive connections from other blocks' outputs
+    #[getter]
+    pub fn input(&mut self, py: Python) -> Py<PyBlockInput> {
+        // Return cached input wrapper if it exists
+        if let Some(ref input) = self.py_input {
+            return input.clone_ref(py);
+        }
+
+        // Create new PyBlockInput wrapper by swapping with a temporary BlockInput
+        let mut temp_input = gnomics::BlockInput::new();
+        std::mem::swap(&mut temp_input, &mut self.inner.input);
+
+        let py_input_obj = PyBlockInput {
+            inner: temp_input,
+            py_children: Vec::new(),
+        };
+
+        let py_input = Py::new(py, py_input_obj).unwrap();
+        self.py_input = Some(py_input.clone_ref(py));
+        py_input
+    }
+
+    /// Initialize the pooler based on connected inputs.
+    ///
+    /// Must be called after connecting inputs and before using compute or learn methods.
     ///
     /// Args:
-    ///     num_i: Number of input bits
-    pub fn init(&mut self, num_i: usize) -> PyResult<()> {
-        // Set input size in the block
-        self.inner.input.state.resize(num_i);
-        self.inner.init().map_err(crate::error::gnomics_error_to_pyerr)
+    ///     num_i: Optional number of input bits. If not provided, uses connected input size.
+    #[pyo3(signature = (num_i=None))]
+    pub fn init(&mut self, py: Python, num_i: Option<usize>) -> PyResult<()> {
+        // Sync from py_input if it exists by swapping back, then forward again
+        if let Some(ref py_input) = self.py_input {
+            let mut py_input_mut = py_input.borrow_mut(py);
+            // Swap the BlockInput with children back into inner.input
+            std::mem::swap(&mut self.inner.input, &mut py_input_mut.inner);
+        }
+
+        // Set input size if provided
+        if let Some(size) = num_i {
+            self.inner.input.state.resize(size);
+        }
+
+        let result = self.inner.init().map_err(crate::error::gnomics_error_to_pyerr);
+
+        // Swap forward again to keep py_input in sync
+        if let Some(ref py_input) = self.py_input {
+            let mut py_input_mut = py_input.borrow_mut(py);
+            std::mem::swap(&mut self.inner.input, &mut py_input_mut.inner);
+        }
+
+        result
     }
 
     /// Compute output from input pattern.
@@ -113,11 +165,22 @@ impl PyPatternPooler {
         self.inner.step();
     }
 
-    /// Get the output BitArray containing active dendrites.
+    /// Get the output BlockOutput object for connecting to other blocks.
+    ///
+    /// Returns:
+    ///     BlockOutput that can be connected to other blocks' inputs
+    #[getter]
+    pub fn output(&self) -> PyBlockOutput {
+        PyBlockOutput {
+            inner: Rc::clone(&self.inner.output),
+        }
+    }
+
+    /// Get the current output state as a BitArray.
     ///
     /// Returns:
     ///     BitArray with exactly num_as bits set
-    pub fn output(&self) -> PyBitArray {
+    pub fn get_output_state(&self) -> PyBitArray {
         PyBitArray::from_rust(self.inner.output.borrow().state.clone())
     }
 

@@ -76,7 +76,7 @@ class TestPatternClassifierCompute:
         input_pattern.set_acts([1, 5, 10, 20, 30])
 
         classifier.compute(input_pattern)
-        output = classifier.output()
+        output = classifier.output.state()
 
         assert isinstance(output, BitArray)
         assert len(output) == 90
@@ -232,7 +232,7 @@ class TestPatternClassifierLearning:
 
         classifier.set_label(1)
         classifier.execute(input_pattern, learn_flag=True)
-        output = classifier.output()
+        output = classifier.output.state()
 
         assert isinstance(output, BitArray)
 
@@ -264,7 +264,7 @@ class TestPatternClassifierOperations:
         classifier.clear()
 
         # After clear, output should be empty
-        output = classifier.output()
+        output = classifier.output.state()
         assert output.num_set() == 0
 
     def test_memory_usage(self) -> None:

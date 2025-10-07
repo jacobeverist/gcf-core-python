@@ -26,7 +26,7 @@ class TestSequenceLearnerOutputSparsity:
         input_pattern.set_acts([0, 1, 2, 3, 4])
 
         learner.execute(input_pattern, learn_flag=True)
-        output = learner.output()
+        output = learner.output.state()
 
         num_active = output.num_set()
         total_statelets = 10 * 4  # num_c * num_spc

@@ -75,7 +75,7 @@ class TestPersistenceTransformerEncoding:
         )
         transformer.set_value(50.0)
         transformer.execute(False)
-        output = transformer.output()
+        output = transformer.output.state()
         assert isinstance(output, BitArray)
         assert len(output) == 1024
 
@@ -92,7 +92,7 @@ class TestPersistenceTransformerEncoding:
         )
         transformer.set_value(50.0)
         transformer.execute(False)
-        output = transformer.output()
+        output = transformer.output.state()
         # Should have exactly num_as active bits
         assert output.num_set() == 40
 
@@ -223,7 +223,7 @@ class TestPersistenceTransformerOperations:
         transformer.clear()
 
         # After clear, output should be empty
-        output = transformer.output()
+        output = transformer.output.state()
         assert output.num_set() == 0
 
         # Counter should also be reset

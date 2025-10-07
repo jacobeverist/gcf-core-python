@@ -58,7 +58,7 @@ class TestScalarTransformerEncoding:
         )
         transformer.set_value(50.0)
         transformer.execute(False)
-        output = transformer.output()
+        output = transformer.output.state()
         assert isinstance(output, BitArray)
         assert len(output) == 1024
 
@@ -69,7 +69,7 @@ class TestScalarTransformerEncoding:
         )
         transformer.set_value(50.0)
         transformer.execute(False)
-        output = transformer.output()
+        output = transformer.output.state()
         # Should have exactly num_as active bits
         assert output.num_set() == 40
 
@@ -82,11 +82,11 @@ class TestScalarTransformerEncoding:
         # Encode similar values
         transformer.set_value(50.0)
         transformer.execute(False)
-        output1 = transformer.output()
+        output1 = transformer.output.state()
 
         transformer.set_value(51.0)
         transformer.execute(False)
-        output2 = transformer.output()
+        output2 = transformer.output.state()
 
         # Similar values should have significant overlap
         overlap = output1.num_similar(output2)
@@ -101,11 +101,11 @@ class TestScalarTransformerEncoding:
         # Encode very different values
         transformer.set_value(10.0)
         transformer.execute(False)
-        output1 = transformer.output()
+        output1 = transformer.output.state()
 
         transformer.set_value(90.0)
         transformer.execute(False)
-        output2 = transformer.output()
+        output2 = transformer.output.state()
 
         # Different values should have minimal overlap
         overlap = output1.num_similar(output2)
@@ -163,7 +163,7 @@ class TestScalarTransformerOperations:
         transformer.clear()
 
         # After clear, output should be empty
-        output = transformer.output()
+        output = transformer.output.state()
         assert output.num_set() == 0
 
     def test_memory_usage(self) -> None:
@@ -207,7 +207,7 @@ class TestScalarTransformerIntegration:
         for value in values:
             transformer.set_value(value)
             transformer.execute(False)
-            outputs.append(transformer.output())
+            outputs.append(transformer.output.state())
 
         # All outputs should be sparse
         assert all(output.num_set() == 40 for output in outputs)

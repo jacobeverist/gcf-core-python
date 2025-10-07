@@ -506,8 +506,17 @@ class ScalarTransformer:
         """
         ...
 
-    def output(self) -> BitArray:
-        """Get the output BitArray containing the encoded representation.
+    @property
+    def output(self) -> BlockOutput:
+        """Get the output BlockOutput object for connecting to other blocks.
+
+        Returns:
+            BlockOutput that can be connected to other blocks' inputs
+        """
+        ...
+
+    def get_output_state(self) -> BitArray:
+        """Get the current output state as a BitArray.
 
         Returns:
             BitArray with sparse binary encoding of the scalar value
@@ -624,8 +633,17 @@ class DiscreteTransformer:
         """
         ...
 
-    def output(self) -> BitArray:
-        """Get the output BitArray containing the encoded representation.
+    @property
+    def output(self) -> BlockOutput:
+        """Get the output BlockOutput object for connecting to other blocks.
+
+        Returns:
+            BlockOutput that can be connected to other blocks' inputs
+        """
+        ...
+
+    def get_output_state(self) -> BitArray:
+        """Get the current output state as a BitArray.
 
         Returns:
             BitArray with sparse binary encoding of the category
@@ -760,8 +778,17 @@ class PersistenceTransformer:
         """
         ...
 
-    def output(self) -> BitArray:
-        """Get the output BitArray containing the encoded persistence duration.
+    @property
+    def output(self) -> BlockOutput:
+        """Get the output BlockOutput object for connecting to other blocks.
+
+        Returns:
+            BlockOutput that can be connected to other blocks' inputs
+        """
+        ...
+
+    def get_output_state(self) -> BitArray:
+        """Get the current output state as a BitArray.
 
         Returns:
             BitArray with sparse binary encoding of persistence
@@ -881,13 +908,22 @@ class PatternPooler:
         """
         ...
 
-    def init(self, num_i: int) -> None:
-        """Initialize the pooler with input size.
+    @property
+    def input(self) -> BlockInput:
+        """Get the BlockInput for connecting encoder outputs.
 
-        Must be called before using compute or learn methods.
+        Returns:
+            BlockInput that can receive connections from other blocks' outputs
+        """
+        ...
+
+    def init(self, num_i: int | None = None) -> None:
+        """Initialize the pooler based on connected inputs.
+
+        Must be called after connecting inputs and before using compute or learn methods.
 
         Args:
-            num_i: Number of input bits
+            num_i: Optional number of input bits. If not provided, uses connected input size.
         """
         ...
 
@@ -920,8 +956,17 @@ class PatternPooler:
         """
         ...
 
-    def output(self) -> BitArray:
-        """Get the output BitArray containing active dendrites.
+    @property
+    def output(self) -> BlockOutput:
+        """Get the output BlockOutput object for connecting to other blocks.
+
+        Returns:
+            BlockOutput that can be connected to other blocks' inputs
+        """
+        ...
+
+    def get_output_state(self) -> BitArray:
+        """Get the current output state as a BitArray.
 
         Returns:
             BitArray with exactly num_as bits set
@@ -1024,13 +1069,22 @@ class PatternClassifier:
         """
         ...
 
-    def init(self, num_i: int) -> None:
-        """Initialize the classifier with input size.
+    @property
+    def input(self) -> BlockInput:
+        """Get the BlockInput for connecting encoder outputs.
 
-        Must be called before using compute or learn methods.
+        Returns:
+            BlockInput that can receive connections from other blocks' outputs
+        """
+        ...
+
+    def init(self, num_i: int | None = None) -> None:
+        """Initialize the classifier based on connected inputs.
+
+        Must be called after connecting inputs and before using compute or learn methods.
 
         Args:
-            num_i: Number of input bits
+            num_i: Optional number of input bits. If not provided, uses connected input size.
         """
         ...
 
@@ -1097,8 +1151,17 @@ class PatternClassifier:
         """
         ...
 
-    def output(self) -> BitArray:
-        """Get the output BitArray containing active dendrites.
+    @property
+    def output(self) -> BlockOutput:
+        """Get the output BlockOutput object for connecting to other blocks.
+
+        Returns:
+            BlockOutput that can be connected to other blocks' inputs
+        """
+        ...
+
+    def get_output_state(self) -> BitArray:
+        """Get the current output state as a BitArray.
 
         Returns:
             BitArray with num_l * num_as bits set
@@ -1208,14 +1271,32 @@ class ContextLearner:
         """
         ...
 
-    def init(self, num_input_bits: int, num_context_bits: int) -> None:
-        """Initialize the learner with input and context sizes.
+    @property
+    def input(self) -> BlockInput:
+        """Get the BlockInput for connecting encoder outputs.
 
-        Must be called before using compute or learn methods.
+        Returns:
+            BlockInput that can receive connections from other blocks' outputs
+        """
+        ...
+
+    @property
+    def context(self) -> BlockInput:
+        """Get the BlockInput for connecting context outputs.
+
+        Returns:
+            BlockInput that can receive connections from other blocks' outputs
+        """
+        ...
+
+    def init(self, num_input_bits: int | None = None, num_context_bits: int | None = None) -> None:
+        """Initialize the learner based on connected inputs.
+
+        Must be called after connecting inputs and before using compute or learn methods.
 
         Args:
-            num_input_bits: Number of input bits (columns)
-            num_context_bits: Number of context bits
+            num_input_bits: Optional number of input bits. If not provided, uses connected input size.
+            num_context_bits: Optional number of context bits. If not provided, uses connected context size.
         """
         ...
 
@@ -1263,11 +1344,20 @@ class ContextLearner:
         """
         ...
 
-    def output(self) -> BitArray:
-        """Get the output BitArray containing predicted/active statelets.
+    @property
+    def output(self) -> BlockOutput:
+        """Get the output BlockOutput object for connecting to other blocks.
 
         Returns:
-            BitArray with active statelets
+            BlockOutput that can be connected to other blocks' inputs
+        """
+        ...
+
+    def get_output_state(self) -> BitArray:
+        """Get the current output state as a BitArray.
+
+        Returns:
+            BitArray with predicted/active statelets
         """
         ...
 
@@ -1375,14 +1465,23 @@ class SequenceLearner:
         """
         ...
 
-    def init(self, num_input_bits: int) -> None:
-        """Initialize the learner with input size.
+    @property
+    def input(self) -> BlockInput:
+        """Get the BlockInput for connecting encoder outputs.
 
-        Must be called before using compute or learn methods.
+        Returns:
+            BlockInput that can receive connections from other blocks' outputs
+        """
+        ...
+
+    def init(self, num_input_bits: int | None = None) -> None:
+        """Initialize the learner based on connected inputs.
+
+        Must be called after connecting inputs and before using compute or learn methods.
         Context is automatically connected to previous output (self-feedback).
 
         Args:
-            num_input_bits: Number of input bits (columns)
+            num_input_bits: Optional number of input bits. If not provided, uses connected input size.
         """
         ...
 
@@ -1435,8 +1534,17 @@ class SequenceLearner:
         """
         ...
 
-    def output(self) -> BitArray:
-        """Get the current output BitArray.
+    @property
+    def output(self) -> BlockOutput:
+        """Get the output BlockOutput object for connecting to other blocks.
+
+        Returns:
+            BlockOutput that can be connected to other blocks' inputs
+        """
+        ...
+
+    def get_output_state(self) -> BitArray:
+        """Get the current output state as a BitArray.
 
         Returns the active statelets predicted for the current time step.
 

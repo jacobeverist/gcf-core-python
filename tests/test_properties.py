@@ -96,11 +96,11 @@ class TestScalarEncoderProperties:
 
         encoder.set_value(test_value)
         encoder.execute(learn_flag=False)
-        output1 = encoder.output()
+        output1 = encoder.output.state()
 
         encoder.set_value(test_value)
         encoder.execute(learn_flag=False)
-        output2 = encoder.output()
+        output2 = encoder.output.state()
 
         # Should have perfect overlap
         assert output1.num_similar(output2) == output1.num_set()
@@ -112,7 +112,7 @@ class TestScalarEncoderProperties:
 
         encoder.set_value(value)
         encoder.execute(learn_flag=False)
-        output = encoder.output()
+        output = encoder.output.state()
 
         # Should produce valid output regardless of input value
         assert output.num_set() == encoder.num_as()
@@ -124,7 +124,7 @@ class TestScalarEncoderProperties:
 
         encoder.set_value(50.0)
         encoder.execute(learn_flag=False)
-        output = encoder.output()
+        output = encoder.output.state()
 
         assert output.num_set() == encoder.num_as()
 
@@ -142,11 +142,11 @@ class TestCategoryEncoderProperties:
 
         encoder.set_value(category)
         encoder.execute(learn_flag=False)
-        output1 = encoder.output()
+        output1 = encoder.output.state()
 
         encoder.set_value(category)
         encoder.execute(learn_flag=False)
-        output2 = encoder.output()
+        output2 = encoder.output.state()
 
         # Should have perfect overlap
         assert output1.num_similar(output2) == output1.num_set()
@@ -167,11 +167,11 @@ class TestCategoryEncoderProperties:
 
         encoder.set_value(cat1)
         encoder.execute(learn_flag=False)
-        output1 = encoder.output()
+        output1 = encoder.output.state()
 
         encoder.set_value(cat2)
         encoder.execute(learn_flag=False)
-        output2 = encoder.output()
+        output2 = encoder.output.state()
 
         # Different categories should have zero overlap
         assert output1.num_similar(output2) == 0
@@ -196,7 +196,7 @@ class TestPoolerProperties:
         input_pattern.set_acts([1, 5, 10, 15, 20])
 
         pooler.execute(input_pattern, learn_flag=False)
-        output = pooler.output()
+        output = pooler.output.state()
 
         # Output should not exceed active_statelets
         assert output.num_set() <= active_statelets
@@ -212,7 +212,7 @@ class TestPoolerProperties:
         pooler.execute(input_pattern, learn_flag=True)
 
         pooler.clear()
-        output = pooler.output()
+        output = pooler.output.state()
 
         assert output.num_set() == 0
 

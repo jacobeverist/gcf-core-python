@@ -67,7 +67,7 @@ class TestFactoryFunctions:
         scalar = create_scalar_encoder(min_value=0.0, max_value=100.0)
         scalar.set_value(50.0)
         scalar.execute(learn_flag=False)
-        output = scalar.output()
+        output = scalar.output.state()
         assert isinstance(output, BitArray)
         assert output.num_set() > 0
 
@@ -75,7 +75,7 @@ class TestFactoryFunctions:
         categorical = create_category_encoder(num_categories=5)
         categorical.set_value(2)
         categorical.execute(learn_flag=False)
-        output = categorical.output()
+        output = categorical.output.state()
         assert isinstance(output, BitArray)
         assert output.num_set() > 0
 
@@ -85,7 +85,7 @@ class TestFactoryFunctions:
         input_ba = BitArray(256)
         input_ba.set_acts([1, 5, 10, 15, 20])
         pooler.execute(input_ba, learn_flag=False)
-        output = pooler.output()
+        output = pooler.output.state()
         assert isinstance(output, BitArray)
 
         # Classifier
@@ -95,7 +95,7 @@ class TestFactoryFunctions:
         input_ba = BitArray(256)
         input_ba.set_acts([1, 5, 10])
         classifier.execute(input_ba, learn_flag=True)
-        output = classifier.output()
+        output = classifier.output.state()
         assert isinstance(output, BitArray)
 
         # Context learner
@@ -106,7 +106,7 @@ class TestFactoryFunctions:
         context_ba = BitArray(100)
         context_ba.set_acts([10, 20, 30])
         learner.execute(input_ba, context_ba, learn_flag=False)
-        output = learner.output()
+        output = learner.output.state()
         assert isinstance(output, BitArray)
 
         # Sequence learner
@@ -115,5 +115,5 @@ class TestFactoryFunctions:
         input_ba = BitArray(50)
         input_ba.set_acts([1, 2, 3])
         seq_learner.execute(input_ba, learn_flag=False)
-        output = seq_learner.output()
+        output = seq_learner.output.state()
         assert isinstance(output, BitArray)

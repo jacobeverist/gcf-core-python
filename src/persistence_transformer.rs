@@ -1,8 +1,10 @@
 //! Python bindings for gnomics::PersistenceTransformer
 
 use crate::bitarray::PyBitArray;
+use crate::block_output::PyBlockOutput;
 use gnomics::{Block, PersistenceTransformer as RustPersistenceTransformer};
 use pyo3::prelude::*;
+use std::rc::Rc;
 
 /// Encodes temporal persistence/stability of scalar values.
 ///
@@ -83,11 +85,22 @@ impl PyPersistenceTransformer {
         self.inner.execute(learn_flag).map_err(crate::error::gnomics_error_to_pyerr)
     }
 
-    /// Get the output BitArray containing the encoded persistence duration.
+    /// Get the output BlockOutput object for connecting to other blocks.
+    ///
+    /// Returns:
+    ///     BlockOutput that can be connected to other blocks' inputs
+    #[getter]
+    pub fn output(&self) -> PyBlockOutput {
+        PyBlockOutput {
+            inner: Rc::clone(&self.inner.output),
+        }
+    }
+
+    /// Get the current output state as a BitArray.
     ///
     /// Returns:
     ///     BitArray with sparse binary encoding of persistence
-    pub fn output(&self) -> PyBitArray {
+    pub fn get_output_state(&self) -> PyBitArray {
         PyBitArray::from_rust(self.inner.output.borrow().state.clone())
     }
 

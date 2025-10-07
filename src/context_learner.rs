@@ -1,8 +1,11 @@
 //! Python bindings for gnomics::ContextLearner
 
 use crate::bitarray::PyBitArray;
+use crate::block_input::PyBlockInput;
+use crate::block_output::PyBlockOutput;
 use gnomics::{Block, ContextLearner as RustContextLearner};
 use pyo3::prelude::*;
+use std::rc::Rc;
 
 /// Context learning block for context-dependent pattern recognition.
 ///
@@ -13,6 +16,9 @@ use pyo3::prelude::*;
 #[pyclass(name = "ContextLearner", module = "gnomics.core", unsendable)]
 pub struct PyContextLearner {
     inner: RustContextLearner,
+    // Python wrappers for input/context to track child references
+    py_input: Option<Py<PyBlockInput>>,
+    py_context: Option<Py<PyBlockInput>>,
 }
 
 #[pymethods]
@@ -57,21 +63,106 @@ impl PyContextLearner {
             false, // always_update
             seed,
         );
-        Ok(PyContextLearner { inner: learner })
+        Ok(PyContextLearner {
+            inner: learner,
+            py_input: None,
+            py_context: None,
+        })
     }
 
-    /// Initialize the learner with input and context sizes.
+    /// Get the BlockInput for connecting encoder outputs.
     ///
-    /// Must be called before using compute or learn methods.
+    /// Returns:
+    ///     BlockInput that can receive connections from other blocks' outputs
+    #[getter]
+    pub fn input(&mut self, py: Python) -> Py<PyBlockInput> {
+        // Return cached input wrapper if it exists
+        if let Some(ref input) = self.py_input {
+            return input.clone_ref(py);
+        }
+
+        // Create new PyBlockInput wrapper by swapping with a temporary BlockInput
+        let mut temp_input = gnomics::BlockInput::new();
+        std::mem::swap(&mut temp_input, &mut self.inner.input);
+
+        let py_input_obj = PyBlockInput {
+            inner: temp_input,
+            py_children: Vec::new(),
+        };
+
+        let py_input = Py::new(py, py_input_obj).unwrap();
+        self.py_input = Some(py_input.clone_ref(py));
+        py_input
+    }
+
+    /// Get the BlockInput for connecting context outputs.
+    ///
+    /// Returns:
+    ///     BlockInput that can receive connections from other blocks' outputs
+    #[getter]
+    pub fn context(&mut self, py: Python) -> Py<PyBlockInput> {
+        // Return cached context wrapper if it exists
+        if let Some(ref context) = self.py_context {
+            return context.clone_ref(py);
+        }
+
+        // Create new PyBlockInput wrapper by swapping with a temporary BlockInput
+        let mut temp_context = gnomics::BlockInput::new();
+        std::mem::swap(&mut temp_context, &mut self.inner.context);
+
+        let py_context_obj = PyBlockInput {
+            inner: temp_context,
+            py_children: Vec::new(),
+        };
+
+        let py_context = Py::new(py, py_context_obj).unwrap();
+        self.py_context = Some(py_context.clone_ref(py));
+        py_context
+    }
+
+    /// Initialize the learner based on connected inputs.
+    ///
+    /// Must be called after connecting inputs and before using compute or learn methods.
     ///
     /// Args:
-    ///     num_input_bits: Number of input bits (columns)
-    ///     num_context_bits: Number of context bits
-    pub fn init(&mut self, num_input_bits: usize, num_context_bits: usize) -> PyResult<()> {
-        // Set input sizes in the block
-        self.inner.input.state.resize(num_input_bits);
-        self.inner.context.state.resize(num_context_bits);
-        self.inner.init().map_err(crate::error::gnomics_error_to_pyerr)
+    ///     num_input_bits: Optional number of input bits. If not provided, uses connected input size.
+    ///     num_context_bits: Optional number of context bits. If not provided, uses connected context size.
+    #[pyo3(signature = (num_input_bits=None, num_context_bits=None))]
+    pub fn init(&mut self, py: Python, num_input_bits: Option<usize>, num_context_bits: Option<usize>) -> PyResult<()> {
+        // Sync from py_input if it exists by swapping back
+        if let Some(ref py_input) = self.py_input {
+            let mut py_input_mut = py_input.borrow_mut(py);
+            std::mem::swap(&mut self.inner.input, &mut py_input_mut.inner);
+        }
+
+        // Sync from py_context if it exists by swapping back
+        if let Some(ref py_context) = self.py_context {
+            let mut py_context_mut = py_context.borrow_mut(py);
+            std::mem::swap(&mut self.inner.context, &mut py_context_mut.inner);
+        }
+
+        // Set input sizes if provided
+        if let Some(size) = num_input_bits {
+            self.inner.input.state.resize(size);
+        }
+        if let Some(size) = num_context_bits {
+            self.inner.context.state.resize(size);
+        }
+
+        let result = self.inner.init().map_err(crate::error::gnomics_error_to_pyerr);
+
+        // Swap forward again to keep wrappers in sync
+        if let Some(ref py_input) = self.py_input {
+            let mut py_input_mut = py_input.borrow_mut(py);
+            std::mem::swap(&mut self.inner.input, &mut py_input_mut.inner);
+        }
+
+        if let Some(ref py_context) = self.py_context {
+            let mut py_context_mut = py_context.borrow_mut(py);
+            std::mem::swap(&mut self.inner.context, &mut py_context_mut.inner);
+        }
+
+        result
     }
 
     /// Compute predictions from input and context patterns.
@@ -133,11 +224,22 @@ impl PyContextLearner {
         self.inner.get_historical_count()
     }
 
-    /// Get the output BitArray containing predicted/active statelets.
+    /// Get the output BlockOutput object for connecting to other blocks.
     ///
     /// Returns:
-    ///     BitArray with active statelets
-    pub fn output(&self) -> PyBitArray {
+    ///     BlockOutput that can be connected to other blocks' inputs
+    #[getter]
+    pub fn output(&self) -> PyBlockOutput {
+        PyBlockOutput {
+            inner: Rc::clone(&self.inner.output),
+        }
+    }
+
+    /// Get the current output state as a BitArray.
+    ///
+    /// Returns:
+    ///     BitArray with predicted/active statelets
+    pub fn get_output_state(&self) -> PyBitArray {
         PyBitArray::from_rust(self.inner.output.borrow().state.clone())
     }
 
