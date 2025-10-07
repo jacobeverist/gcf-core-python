@@ -9,7 +9,7 @@ use pyo3::prelude::*;
 /// DiscreteTransformer converts discrete categories into binary patterns with
 /// zero overlap between different categories. This ensures each category has
 /// a unique representation while maintaining the benefits of sparse encoding.
-#[pyclass(name = "DiscreteTransformer", module = "gnomics.core")]
+#[pyclass(name = "DiscreteTransformer", module = "gnomics.core", unsendable)]
 pub struct PyDiscreteTransformer {
     inner: RustDiscreteTransformer,
 }
@@ -62,7 +62,7 @@ impl PyDiscreteTransformer {
     /// Returns:
     ///     BitArray with sparse binary encoding of the category
     pub fn output(&self) -> PyBitArray {
-        PyBitArray::from_rust(self.inner.output.state.clone())
+        PyBitArray::from_rust(self.inner.output.borrow().state.clone())
     }
 
     /// Get the output state at a specific time offset.
@@ -73,7 +73,7 @@ impl PyDiscreteTransformer {
     /// Returns:
     ///     BitArray containing the state at that time
     pub fn output_at(&self, time: usize) -> PyBitArray {
-        PyBitArray::from_rust(self.inner.output.get_bitarray(time).clone())
+        PyBitArray::from_rust(self.inner.output.borrow().get_bitarray(time).clone())
     }
 
     /// Check if the output has changed from the previous time step.
@@ -81,7 +81,7 @@ impl PyDiscreteTransformer {
     /// Returns:
     ///     True if the output changed
     pub fn has_changed(&self) -> bool {
-        self.inner.output.has_changed()
+        self.inner.output.borrow().has_changed()
     }
 
     /// Clear all internal state and reset the transformer.

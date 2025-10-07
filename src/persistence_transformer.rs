@@ -9,7 +9,7 @@ use pyo3::prelude::*;
 /// PersistenceTransformer tracks how long a value remains relatively unchanged,
 /// encoding the persistence duration as a sparse distributed representation.
 /// This enables downstream blocks to recognize temporal patterns and stability.
-#[pyclass(name = "PersistenceTransformer", module = "gnomics.core")]
+#[pyclass(name = "PersistenceTransformer", module = "gnomics.core", unsendable)]
 pub struct PyPersistenceTransformer {
     inner: RustPersistenceTransformer,
 }
@@ -88,7 +88,7 @@ impl PyPersistenceTransformer {
     /// Returns:
     ///     BitArray with sparse binary encoding of persistence
     pub fn output(&self) -> PyBitArray {
-        PyBitArray::from_rust(self.inner.output.state.clone())
+        PyBitArray::from_rust(self.inner.output.borrow().state.clone())
     }
 
     /// Get the output state at a specific time offset.
@@ -99,7 +99,7 @@ impl PyPersistenceTransformer {
     /// Returns:
     ///     BitArray containing the state at that time
     pub fn output_at(&self, time: usize) -> PyBitArray {
-        PyBitArray::from_rust(self.inner.output.get_bitarray(time).clone())
+        PyBitArray::from_rust(self.inner.output.borrow().get_bitarray(time).clone())
     }
 
     /// Check if the output has changed from the previous time step.
@@ -107,7 +107,7 @@ impl PyPersistenceTransformer {
     /// Returns:
     ///     True if the output changed
     pub fn has_changed(&self) -> bool {
-        self.inner.output.has_changed()
+        self.inner.output.borrow().has_changed()
     }
 
     /// Clear all internal state and reset the transformer.

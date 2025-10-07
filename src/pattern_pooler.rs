@@ -118,7 +118,7 @@ impl PyPatternPooler {
     /// Returns:
     ///     BitArray with exactly num_as bits set
     pub fn output(&self) -> PyBitArray {
-        PyBitArray::from_rust(self.inner.output.state.clone())
+        PyBitArray::from_rust(self.inner.output.borrow().state.clone())
     }
 
     /// Get the output state at a specific time offset.
@@ -129,7 +129,7 @@ impl PyPatternPooler {
     /// Returns:
     ///     BitArray containing the state at that time
     pub fn output_at(&self, time: usize) -> PyBitArray {
-        PyBitArray::from_rust(self.inner.output.get_bitarray(time).clone())
+        PyBitArray::from_rust(self.inner.output.borrow().get_bitarray(time).clone())
     }
 
     /// Check if the output has changed from the previous time step.
@@ -137,7 +137,7 @@ impl PyPatternPooler {
     /// Returns:
     ///     True if the output changed
     pub fn has_changed(&self) -> bool {
-        self.inner.output.has_changed()
+        self.inner.output.borrow().has_changed()
     }
 
     /// Clear all internal state and reset the pooler.

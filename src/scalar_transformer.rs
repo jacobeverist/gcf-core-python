@@ -10,7 +10,7 @@ use pyo3::prelude::*;
 /// semantically similar values have overlapping bit patterns. This enables
 /// downstream blocks to recognize similar values and generalize across
 /// continuous ranges.
-#[pyclass(name = "ScalarTransformer", module = "gnomics.core")]
+#[pyclass(name = "ScalarTransformer", module = "gnomics.core", unsendable)]
 pub struct PyScalarTransformer {
     inner: RustScalarTransformer,
 }
@@ -74,7 +74,7 @@ impl PyScalarTransformer {
     /// Returns:
     ///     BitArray with sparse binary encoding of the scalar value
     pub fn output(&self) -> PyBitArray {
-        PyBitArray::from_rust(self.inner.output.state.clone())
+        PyBitArray::from_rust(self.inner.output.borrow().state.clone())
     }
 
     /// Get the output state at a specific time offset.
@@ -85,7 +85,7 @@ impl PyScalarTransformer {
     /// Returns:
     ///     BitArray containing the state at that time
     pub fn output_at(&self, time: usize) -> PyBitArray {
-        PyBitArray::from_rust(self.inner.output.get_bitarray(time).clone())
+        PyBitArray::from_rust(self.inner.output.borrow().get_bitarray(time).clone())
     }
 
     /// Check if the output has changed from the previous time step.
@@ -93,7 +93,7 @@ impl PyScalarTransformer {
     /// Returns:
     ///     True if the output changed
     pub fn has_changed(&self) -> bool {
-        self.inner.output.has_changed()
+        self.inner.output.borrow().has_changed()
     }
 
     /// Clear all internal state and reset the transformer.
