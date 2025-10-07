@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-`gnomics` is a Python client library project using Python 3.13+. The project uses `uv` for dependency management and virtual environment handling.
+`gnomics` is a Python client library project using Python 3.9+. The project uses `uv` for dependency management and virtual environment handling.
 
 ## Goal
 
@@ -70,7 +70,7 @@ uv run mypy python/
 ## Project Configuration
 
 - **pyproject.toml**: Main project configuration file defining dependencies, build settings, and tool configurations
-- **Python version**: Requires Python 3.13+
+- **Python version**: Requires Python 3.9+
 - **Virtual environment**: Managed by `uv` in `.venv/`
 
 ## Architecture Notes

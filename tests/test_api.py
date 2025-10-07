@@ -41,9 +41,7 @@ class TestFactoryFunctions:
 
     def test_create_classifier(self) -> None:
         """Test create_classifier factory."""
-        classifier = create_classifier(
-            num_labels=3, num_statelets=90, active_statelets=10
-        )
+        classifier = create_classifier(num_labels=3, num_statelets=90, active_statelets=10)
         assert classifier.num_l() == 3
         assert classifier.num_s() == 90
         assert classifier.num_as() == 10
@@ -83,9 +81,7 @@ class TestFactoryFunctions:
         assert isinstance(output, BitArray)
 
         # Classifier
-        classifier = create_classifier(
-            num_labels=3, num_statelets=90, active_statelets=10
-        )
+        classifier = create_classifier(num_labels=3, num_statelets=90, active_statelets=10)
         classifier.init(num_i=256)
         classifier.set_label(0)
         input_ba = BitArray(256)

@@ -1,8 +1,5 @@
 """Property-based tests using hypothesis."""
 
-from hypothesis import given
-from hypothesis import strategies as st
-
 from gnomics import BitArray
 from gnomics.api import (
     create_category_encoder,
@@ -10,6 +7,8 @@ from gnomics.api import (
     create_pooler,
     create_scalar_encoder,
 )
+from hypothesis import given
+from hypothesis import strategies as st
 
 
 class TestBitArrayProperties:
@@ -121,9 +120,7 @@ class TestScalarEncoderProperties:
     @given(st.integers(min_value=5, max_value=50))
     def test_output_sparsity(self, num_segments: int) -> None:
         """Output should always have exactly num_as active bits."""
-        encoder = create_scalar_encoder(
-            min_value=0.0, max_value=100.0, num_segments=num_segments
-        )
+        encoder = create_scalar_encoder(min_value=0.0, max_value=100.0, num_segments=num_segments)
 
         encoder.set_value(50.0)
         encoder.execute(learn_flag=False)
@@ -136,9 +133,7 @@ class TestCategoryEncoderProperties:
     """Property-based tests for DiscreteTransformer."""
 
     @given(st.integers(min_value=2, max_value=20), st.integers(min_value=0, max_value=19))
-    def test_same_category_same_encoding(
-        self, num_categories: int, category: int
-    ) -> None:
+    def test_same_category_same_encoding(self, num_categories: int, category: int) -> None:
         """Encoding the same category twice should produce identical output."""
         if category >= num_categories:
             return
@@ -189,16 +184,12 @@ class TestPoolerProperties:
         st.integers(min_value=50, max_value=200),
         st.integers(min_value=5, max_value=20),
     )
-    def test_output_respects_sparsity(
-        self, num_statelets: int, active_statelets: int
-    ) -> None:
+    def test_output_respects_sparsity(self, num_statelets: int, active_statelets: int) -> None:
         """Pooler output should not exceed num_as active bits."""
         if active_statelets >= num_statelets:
             return
 
-        pooler = create_pooler(
-            num_statelets=num_statelets, active_statelets=active_statelets
-        )
+        pooler = create_pooler(num_statelets=num_statelets, active_statelets=active_statelets)
         pooler.init(num_i=256)
 
         input_pattern = BitArray(256)
@@ -233,9 +224,7 @@ class TestClassifierProperties:
         st.integers(min_value=2, max_value=5),
         st.integers(min_value=5, max_value=15),
     )
-    def test_probabilities_sum_to_one(
-        self, num_labels: int, active_statelets: int
-    ) -> None:
+    def test_probabilities_sum_to_one(self, num_labels: int, active_statelets: int) -> None:
         """Probability distribution should sum to approximately 1.0 after learning."""
         # Ensure num_statelets is divisible by num_labels
         num_statelets = num_labels * 30

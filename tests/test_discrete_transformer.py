@@ -183,9 +183,7 @@ class TestDiscreteTransformerIntegration:
     def test_all_categories_unique(self) -> None:
         """Test that all categories have unique non-overlapping encodings."""
         num_categories = 10
-        transformer = DiscreteTransformer(
-            num_v=num_categories, num_s=1024, num_t=2, seed=42
-        )
+        transformer = DiscreteTransformer(num_v=num_categories, num_s=1024, num_t=2, seed=42)
 
         encodings = []
         for category in range(num_categories):

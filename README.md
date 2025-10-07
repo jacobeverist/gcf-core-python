@@ -1,10 +1,12 @@
-# GCF Core Python Client
+# Gnomics Computing Framework (Python)
 
 Python bindings for the [Gnomic Computing Framework (GCF)](https://github.com/jacobeverist/gcf-core-rust) - a high-performance computational neuroscience framework for machine learning based on Hierarchical Temporal Memory (HTM) principles.
 
 ## Overview
 
-The Gnomic Computing Framework is a machine learning library inspired by HTM and sparse distributed representations. This Python client provides Pythonic bindings to the underlying Rust implementation, offering high performance with an easy-to-use interface.
+The Gnomic Computing Framework is a machine learning library inspired by HTM and sparse distributed representations. This Python package provides Pythonic bindings to the underlying Rust implementation, offering high performance with an easy-to-use interface.
+
+**Requirements:** Python 3.9+
 
 ## Features
 
@@ -168,14 +170,14 @@ uv run mypy python/gnomics --strict
 
 ## Development
 
-This project uses:
-- **uv** for Python dependency management
+This project uses modern Python tooling:
+- **uv** for fast Python dependency management
 - **maturin** for building Rust extensions
-- **pytest** for testing
-- **ruff** for linting and formatting
-- **mypy** for type checking
+- **pytest** for testing (with hypothesis for property-based testing)
+- **ruff** for fast linting and formatting
+- **mypy** for static type checking
 
-### Setup
+### Development Setup
 
 ```bash
 # Install dependencies
@@ -188,17 +190,26 @@ uv run maturin develop
 uv run pytest
 
 # Type check
-uv run mypy python/gnomics --strict
+uv run mypy python/
+
+# Format and lint
+uv run ruff format .
+uv run ruff check .
 ```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
 ## Project Structure
 
 ```
 gcf-core-python/
 ├── src/              # Rust source code (PyO3 bindings)
-├── python/           # Python package code
-│   └── gnomics/
-├── tests/            # Python tests
+├── python/
+│   └── gnomics/      # Python package
+│       ├── core.pyi  # Type stubs for Rust extension
+│       ├── api.py    # Pythonic API with factory functions
+│       └── __init__.py
+├── tests/            # Comprehensive test suite (179 tests)
 ├── Cargo.toml        # Rust dependencies
 └── pyproject.toml    # Python project configuration
 ```

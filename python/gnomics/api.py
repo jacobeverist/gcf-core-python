@@ -11,14 +11,25 @@ from gnomics.core import (
     BitArray,
     BlockMemory,
     BlockOutput,
+)
+from gnomics.core import (
     ContextLearner as _ContextLearner,
+)
+from gnomics.core import (
     DiscreteTransformer as _DiscreteTransformer,
+)
+from gnomics.core import (
     PatternClassifier as _PatternClassifier,
+)
+from gnomics.core import (
     PatternPooler as _PatternPooler,
+)
+from gnomics.core import (
     PersistenceTransformer as _PersistenceTransformer,
+)
+from gnomics.core import (
     ScalarTransformer as _ScalarTransformer,
 )
-
 
 # Type aliases for clarity
 ScalarTransformer = _ScalarTransformer

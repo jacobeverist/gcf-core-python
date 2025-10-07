@@ -39,9 +39,7 @@ class TestScalarEncoderPipeline:
         """Test scalar encoder -> classifier pipeline."""
         # Create encoder and classifier
         encoder = create_scalar_encoder(min_value=0.0, max_value=100.0)
-        classifier = create_classifier(
-            num_labels=3, num_statelets=90, active_statelets=10
-        )
+        classifier = create_classifier(num_labels=3, num_statelets=90, active_statelets=10)
 
         # Initialize classifier with encoder output size
         encoder_output_size = encoder.num_s() * encoder.num_as()
@@ -156,9 +154,7 @@ class TestMultiStageClassificationPipeline:
         # Create components
         encoder = create_scalar_encoder(min_value=0.0, max_value=100.0)
         pooler = create_pooler(num_statelets=200, active_statelets=20)
-        classifier = create_classifier(
-            num_labels=2, num_statelets=60, active_statelets=6
-        )
+        classifier = create_classifier(num_labels=2, num_statelets=60, active_statelets=6)
 
         # Initialize
         encoder_output_size = encoder.num_s() * encoder.num_as()
@@ -304,9 +300,7 @@ class TestMemoryUsagePipeline:
         # Create components
         encoder = create_scalar_encoder(min_value=0.0, max_value=100.0)
         pooler = create_pooler(num_statelets=200, active_statelets=20)
-        classifier = create_classifier(
-            num_labels=3, num_statelets=90, active_statelets=10
-        )
+        classifier = create_classifier(num_labels=3, num_statelets=90, active_statelets=10)
 
         # Get memory usage
         encoder_mem = encoder.memory_usage()
