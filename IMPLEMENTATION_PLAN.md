@@ -95,10 +95,10 @@ All 9 phases have been successfully implemented:
 - Configuration: num_l, num_s, num_as, permanence and pooling parameters
 - 10 comprehensive tests, all passing
 
-## Phase 6: Temporal Blocks ✅ COMPLETED
+## Phase 6: Context Blocks ✅ COMPLETED
 
 ### 13. Wrap ContextLearner ✅
-- Implemented ContextLearner for temporal/contextual pattern recognition
+- Implemented ContextLearner for contextual pattern recognition
 - Dual-input learning: input and context patterns with separate BitArrays
 - Exposed compute, learn, execute methods with both input and context
 - Configuration: num_c, num_spc, num_dps, num_rpd, dendrite threshold, permanence parameters
@@ -111,7 +111,7 @@ All 9 phases have been successfully implemented:
 
 ### 14. Create Pythonic API layer ✅
 - Created api.py module with convenience factory functions
-- Factory functions: create_scalar_encoder(), create_category_encoder(), create_pooler(), create_classifier(), create_temporal_learner()
+- Factory functions: create_scalar_encoder(), create_category_encoder(), create_pooler(), create_classifier(), create_context_learner()
 - Sensible default parameters for all learning blocks
 - Simplified construction with readable parameter names
 - Note: PyO3 classes cannot be subclassed, so properties/context managers were not feasible
@@ -127,7 +127,7 @@ All 9 phases have been successfully implemented:
 
 ### 16. Write comprehensive test suite ✅
 - Unit tests for all wrapped classes: 154 tests across 11 test files
-- Integration tests for block pipelines: 9 tests covering encoder→pooler, encoder→classifier, temporal learning, multi-stage pipelines
+- Integration tests for block pipelines: 9 tests covering encoder→pooler, encoder→classifier, context learning, multi-stage pipelines
 - Property-based tests using hypothesis: 16 tests validating invariants across randomized inputs
 - **Total: 179 tests, all passing**
 

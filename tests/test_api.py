@@ -6,7 +6,8 @@ from gnomics.api import (
     create_classifier,
     create_pooler,
     create_scalar_encoder,
-    create_temporal_learner,
+    create_sequence_learner,
+    create_context_learner,
 )
 
 
@@ -46,9 +47,16 @@ class TestFactoryFunctions:
         assert classifier.num_s() == 90
         assert classifier.num_as() == 10
 
-    def test_create_temporal_learner(self) -> None:
-        """Test create_temporal_learner factory."""
-        learner = create_temporal_learner(num_columns=100)
+    def test_create_context_learner(self) -> None:
+        """Test create_context_learner factory."""
+        learner = create_context_learner(num_columns=100)
+        assert learner.num_c() == 100
+        assert learner.num_spc() == 8
+        assert learner.num_dps() == 4
+
+    def test_create_sequence_learner(self) -> None:
+        """Test create_sequence_learner factory."""
+        learner = create_sequence_learner(num_columns=100)
         assert learner.num_c() == 100
         assert learner.num_spc() == 8
         assert learner.num_dps() == 4
@@ -90,8 +98,8 @@ class TestFactoryFunctions:
         output = classifier.output()
         assert isinstance(output, BitArray)
 
-        # Temporal learner
-        learner = create_temporal_learner(num_columns=50)
+        # Context learner
+        learner = create_context_learner(num_columns=50)
         learner.init(num_input_bits=50, num_context_bits=100)
         input_ba = BitArray(50)
         input_ba.set_acts([1, 2, 3])
@@ -99,4 +107,13 @@ class TestFactoryFunctions:
         context_ba.set_acts([10, 20, 30])
         learner.execute(input_ba, context_ba, learn_flag=False)
         output = learner.output()
+        assert isinstance(output, BitArray)
+
+        # Sequence learner
+        seq_learner = create_sequence_learner(num_columns=50)
+        seq_learner.init(num_input_bits=50)
+        input_ba = BitArray(50)
+        input_ba.set_acts([1, 2, 3])
+        seq_learner.execute(input_ba, learn_flag=False)
+        output = seq_learner.output()
         assert isinstance(output, BitArray)

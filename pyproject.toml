@@ -12,7 +12,7 @@ license = {text = "MIT"}
 authors = [
     {name = "Jacob Everist"}
 ]
-keywords = ["machine-learning", "neuroscience", "pattern-recognition", "temporal-learning", "htm"]
+keywords = ["machine-learning", "neuroscience", "pattern-recognition", "context-learning", "htm"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",

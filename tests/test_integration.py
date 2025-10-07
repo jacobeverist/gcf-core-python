@@ -6,7 +6,7 @@ from gnomics.api import (
     create_classifier,
     create_pooler,
     create_scalar_encoder,
-    create_temporal_learner,
+    create_context_learner,
 )
 
 
@@ -104,19 +104,19 @@ class TestCategoryEncoderPipeline:
             assert pooled.num_set() <= 15
 
 
-class TestTemporalLearningPipeline:
-    """Test temporal learning pipelines."""
+class TestContextLearningPipeline:
+    """Test context learning pipelines."""
 
-    def test_encoder_to_temporal_learner(self) -> None:
-        """Test scalar encoder -> temporal learner pipeline."""
-        # Create encoder and temporal learner
+    def test_encoder_to_context_learner(self) -> None:
+        """Test scalar encoder -> context learner pipeline."""
+        # Create encoder and context learner
         encoder = create_scalar_encoder(min_value=0.0, max_value=100.0, num_segments=20)
 
         # Encoder output becomes input to learner
         encoder_output_size = encoder.num_s() * encoder.num_as()
 
         # ContextLearner num_columns must equal num_input_bits
-        learner = create_temporal_learner(num_columns=encoder_output_size)
+        learner = create_context_learner(num_columns=encoder_output_size)
 
         # Context is previous encoder output
         learner.init(num_input_bits=encoder_output_size, num_context_bits=encoder_output_size)
@@ -132,7 +132,7 @@ class TestTemporalLearningPipeline:
             encoder.execute(learn_flag=False)
             current_encoded = encoder.output()
 
-            # Learn temporal pattern (current input, previous as context)
+            # Learn context pattern (current input, previous as context)
             learner.execute(current_encoded, prev_encoded, learn_flag=True)
 
             # Get prediction and anomaly
@@ -204,13 +204,13 @@ class TestMultiStageClassificationPipeline:
 class TestSequenceLearningPipeline:
     """Test sequence learning pipelines."""
 
-    def test_category_temporal_learning(self) -> None:
-        """Test learning temporal sequences of categories."""
-        # Create category encoder and temporal learner
+    def test_category_context_learning(self) -> None:
+        """Test learning context sequences of categories."""
+        # Create category encoder and context learner
         encoder = create_category_encoder(num_categories=5)
 
         # ContextLearner num_columns must equal num_input_bits
-        learner = create_temporal_learner(num_columns=encoder.num_s())
+        learner = create_context_learner(num_columns=encoder.num_s())
 
         # Initialize
         learner.init(num_input_bits=encoder.num_s(), num_context_bits=encoder.num_s())

@@ -1,6 +1,6 @@
 # Gnomics Computing Framework (Python)
 
-Python bindings for the [Gnomic Computing Framework (GCF)](https://github.com/jacobeverist/gcf-core-rust) - a high-performance computational neuroscience framework for machine learning based on Hierarchical Temporal Memory (HTM) principles.
+Python bindings for the [Gnomic Computing Framework (GCF)](https://github.com/jacobeverist/gcf-core-rust) - a high-performance computational neuroscience framework for machine learning based on Hierarchical Context Memory (HTM) principles.
 
 ## Overview
 
@@ -14,7 +14,7 @@ The Gnomic Computing Framework is a machine learning library inspired by HTM and
 - **Sparse Distributed Representations**: Efficient BitArray with 32x memory compression
 - **Encoding**: Scalar and categorical value encoding into SDRs
 - **Learning**: Unsupervised (PatternPooler) and supervised (PatternClassifier) learning
-- **Temporal Learning**: Context-dependent pattern recognition with anomaly detection
+- **Context Learning**: Context-dependent pattern recognition with anomaly detection
 - **Type-Safe**: Complete type stubs for IDE support and mypy compatibility
 - **Well-Tested**: 179 tests including unit, integration, and property-based tests
 
@@ -140,11 +140,11 @@ from gnomics.api import create_classifier
 classifier = create_classifier(num_labels=5, num_statelets=150, active_statelets=15)
 ```
 
-**ContextLearner**: Temporal pattern recognition with anomaly detection
+**ContextLearner**: Context pattern recognition with anomaly detection
 ```python
-from gnomics.api import create_temporal_learner
+from gnomics.api import create_context_learner
 
-learner = create_temporal_learner(num_columns=100)
+learner = create_context_learner(num_columns=100)
 ```
 
 ## Testing

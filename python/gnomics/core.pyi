@@ -1082,7 +1082,7 @@ class PatternClassifier:
     def __repr__(self) -> str: ...
 
 class ContextLearner:
-    """Temporal learning block for context-dependent pattern recognition.
+    """Context learning block for context-dependent pattern recognition.
 
     ContextLearner learns associations between inputs and contexts, enabling
     it to predict inputs based on context and detect anomalies when inputs
@@ -1103,7 +1103,7 @@ class ContextLearner:
         num_t: int,
         seed: int,
     ) -> None:
-        """Create a new ContextLearner for temporal/contextual learning.
+        """Create a new ContextLearner for contextual learning.
 
         Args:
             num_c: Number of columns (matches input size)
@@ -1223,6 +1223,176 @@ class ContextLearner:
 
     def num_dps(self) -> int:
         """Get the number of dendrites per statelet.
+
+        Returns:
+            Dendrites per statelet
+        """
+        ...
+
+    def d_thresh(self) -> int:
+        """Get the dendrite activation threshold.
+
+        Returns:
+            Dendrite threshold
+        """
+        ...
+
+    def memory_usage(self) -> int:
+        """Get estimated memory usage in bytes.
+
+        Returns:
+            Estimated memory usage
+        """
+        ...
+
+    def __repr__(self) -> str: ...
+
+class SequenceLearner:
+    """Sequence learning block for temporal pattern recognition with self-feedback.
+
+    SequenceLearner learns temporal sequences and predicts next patterns.
+    It is nearly identical to ContextLearner but uses its own previous output
+    as context, enabling it to learn temporal transitions automatically.
+    """
+
+    def __init__(
+        self,
+        num_c: int,
+        num_spc: int,
+        num_dps: int,
+        num_rpd: int,
+        d_thresh: int,
+        perm_thr: int,
+        perm_inc: int,
+        perm_dec: int,
+        num_t: int,
+        always_update: bool = False,
+        seed: int = 0,
+    ) -> None:
+        """Create a new SequenceLearner for temporal sequence learning.
+
+        Args:
+            num_c: Number of columns (matches input size)
+            num_spc: Statelets per column
+            num_dps: Dendrites per statelet
+            num_rpd: Receptors per dendrite
+            d_thresh: Dendrite activation threshold
+            perm_thr: Permanence threshold (0-99, typically 20)
+            perm_inc: Permanence increment (typically 2)
+            perm_dec: Permanence decrement (typically 1)
+            num_t: History depth (minimum 2)
+            always_update: Update even when inputs unchanged (default: False)
+            seed: Random seed for reproducibility (default: 0)
+        """
+        ...
+
+    def init(self, num_input_bits: int) -> None:
+        """Initialize the learner with input size.
+
+        Must be called before using compute or learn methods.
+        Context is automatically connected to previous output (self-feedback).
+
+        Args:
+            num_input_bits: Number of input bits (columns)
+        """
+        ...
+
+    def compute(self, input: BitArray) -> None:
+        """Compute predictions from input pattern.
+
+        Uses previous output as context to predict current input.
+
+        Args:
+            input: Input BitArray pattern (active columns)
+        """
+        ...
+
+    def learn(self) -> None:
+        """Learn the temporal transition from previous to current pattern."""
+        ...
+
+    def execute(self, input: BitArray, learn_flag: bool) -> None:
+        """Execute full pipeline: compute and optionally learn.
+
+        Args:
+            input: Input BitArray pattern (active columns)
+            learn_flag: Whether to perform learning
+        """
+        ...
+
+    def clear(self) -> None:
+        """Clear all state and history."""
+        ...
+
+    def get_anomaly_score(self) -> float:
+        """Get current anomaly score (0.0-1.0).
+
+        Indicates the percentage of input columns that were unexpected.
+        - 0.0 = All columns were predicted by previous pattern
+        - 1.0 = All columns were unexpected (sequence broken)
+
+        Returns:
+            Anomaly score from 0.0 to 1.0
+        """
+        ...
+
+    def get_historical_count(self) -> int:
+        """Get count of statelets that have learned at least one transition.
+
+        Indicates how many different temporal patterns have been learned.
+
+        Returns:
+            Count of statelets with learned patterns
+        """
+        ...
+
+    def output(self) -> BitArray:
+        """Get the current output BitArray.
+
+        Returns the active statelets predicted for the current time step.
+
+        Returns:
+            BitArray with active statelets
+        """
+        ...
+
+    def output_at(self, time: int) -> BitArray:
+        """Get output at a specific historical time step.
+
+        Args:
+            time: Time offset (0=current, 1=previous, etc.)
+
+        Returns:
+            BitArray at the specified time step
+        """
+        ...
+
+    def has_changed(self) -> bool:
+        """Check if output has changed since last time step.
+
+        Returns:
+            True if output differs from previous time step
+        """
+        ...
+
+    def num_c(self) -> int:
+        """Get the number of columns.
+
+        Returns:
+            Number of columns
+        """
+        ...
+
+    def num_spc(self) -> int:
+        """Get statelets per column.
+
+        Returns:
+            Statelets per column
+        """
+        ...
+
+    def num_dps(self) -> int:
+        """Get dendrites per statelet.
 
         Returns:
             Dendrites per statelet

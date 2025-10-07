@@ -8,6 +8,7 @@ mod pattern_classifier;
 mod pattern_pooler;
 mod persistence_transformer;
 mod scalar_transformer;
+mod sequence_learner;
 
 use bitarray::PyBitArray;
 use block_memory::PyBlockMemory;
@@ -18,6 +19,7 @@ use pattern_classifier::PyPatternClassifier;
 use pattern_pooler::PyPatternPooler;
 use persistence_transformer::PyPersistenceTransformer;
 use scalar_transformer::PyScalarTransformer;
+use sequence_learner::PySequenceLearner;
 use pyo3::prelude::*;
 
 /// Python bindings for the Gnomic Computing Framework (GCF)
@@ -33,5 +35,6 @@ fn core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PyPatternPooler>()?;
     m.add_class::<PyPatternClassifier>()?;
     m.add_class::<PyContextLearner>()?;
+    m.add_class::<PySequenceLearner>()?;
     Ok(())
 }

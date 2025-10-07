@@ -30,6 +30,9 @@ from gnomics.core import (
 from gnomics.core import (
     ScalarTransformer as _ScalarTransformer,
 )
+from gnomics.core import (
+    SequenceLearner as _SequenceLearner,
+)
 
 # Type aliases for clarity
 ScalarTransformer = _ScalarTransformer
@@ -38,6 +41,7 @@ PersistenceTransformer = _PersistenceTransformer
 PatternPooler = _PatternPooler
 PatternClassifier = _PatternClassifier
 ContextLearner = _ContextLearner
+SequenceLearner = _SequenceLearner
 
 
 # Convenience factory functions
@@ -186,7 +190,7 @@ def create_classifier(
     )
 
 
-def create_temporal_learner(
+def create_context_learner(
     num_columns: int,
     statelets_per_column: int = 8,
     dendrites_per_statelet: int = 4,
@@ -229,6 +233,55 @@ def create_temporal_learner(
     )
 
 
+def create_sequence_learner(
+    num_columns: int,
+    statelets_per_column: int = 8,
+    dendrites_per_statelet: int = 4,
+    receptors_per_dendrite: int = 20,
+    dendrite_threshold: int = 15,
+    permanence_threshold: int = 20,
+    permanence_increment: int = 2,
+    permanence_decrement: int = 1,
+    num_history: int = 3,
+    always_update: bool = False,
+    seed: int = 42,
+) -> SequenceLearner:
+    """Create a SequenceLearner with sensible defaults.
+
+    SequenceLearner learns temporal sequences using self-feedback, where
+    previous output automatically provides context for predicting the next pattern.
+
+    Args:
+        num_columns: Number of columns (matches input size)
+        statelets_per_column: Statelets per column (default: 8)
+        dendrites_per_statelet: Dendrites per statelet (default: 4)
+        receptors_per_dendrite: Receptors per dendrite (default: 20)
+        dendrite_threshold: Dendrite activation threshold (default: 15)
+        permanence_threshold: Synaptic permanence threshold (default: 20)
+        permanence_increment: Learning increment (default: 2)
+        permanence_decrement: Punishment decrement (default: 1)
+        num_history: History depth (default: 3, minimum 2)
+        always_update: Update even when inputs unchanged (default: False)
+        seed: Random seed (default: 42)
+
+    Returns:
+        Configured SequenceLearner
+    """
+    return SequenceLearner(
+        num_columns,
+        statelets_per_column,
+        dendrites_per_statelet,
+        receptors_per_dendrite,
+        dendrite_threshold,
+        permanence_threshold,
+        permanence_increment,
+        permanence_decrement,
+        num_history,
+        always_update,
+        seed,
+    )
+
+
 __all__ = [
     "BitArray",
     "BlockOutput",
@@ -239,9 +292,11 @@ __all__ = [
     "PatternPooler",
     "PatternClassifier",
     "ContextLearner",
+    "SequenceLearner",
     "create_scalar_encoder",
     "create_category_encoder",
     "create_pooler",
     "create_classifier",
-    "create_temporal_learner",
+    "create_context_learner",
+    "create_sequence_learner",
 ]

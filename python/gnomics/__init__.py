@@ -15,6 +15,7 @@ from gnomics.core import (
     PatternPooler,
     PersistenceTransformer,
     ScalarTransformer,
+    SequenceLearner,
     __version__,
 )
 
@@ -29,4 +30,5 @@ __all__ = [
     "PatternPooler",
     "PatternClassifier",
     "ContextLearner",
+    "SequenceLearner",
 ]

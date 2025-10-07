@@ -4,7 +4,7 @@ use crate::bitarray::PyBitArray;
 use gnomics::{Block, ContextLearner as RustContextLearner};
 use pyo3::prelude::*;
 
-/// Temporal learning block for context-dependent pattern recognition.
+/// Context learning block for context-dependent pattern recognition.
 ///
 /// ContextLearner learns associations between inputs and contexts, enabling
 /// it to predict inputs based on context and detect anomalies when inputs
@@ -17,7 +17,7 @@ pub struct PyContextLearner {
 
 #[pymethods]
 impl PyContextLearner {
-    /// Create a new ContextLearner for temporal/contextual learning.
+    /// Create a new ContextLearner for contextual learning.
     ///
     /// Args:
     ///     num_c: Number of columns (matches input size)
