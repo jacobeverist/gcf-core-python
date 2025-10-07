@@ -4,10 +4,10 @@ from gnomics.api import (
     BitArray,
     create_category_encoder,
     create_classifier,
+    create_context_learner,
     create_pooler,
     create_scalar_encoder,
     create_sequence_learner,
-    create_context_learner,
 )
 
 

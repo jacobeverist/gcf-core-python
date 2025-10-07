@@ -10,6 +10,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This python project is to be a wrapper around the Rust library found in gcf-core-rust located at https://github.com/jacobeverist/gcf-core-rust
 
+**Local development**: The most up-to-date gcf-core-rust repository is located at `/Users/jacobeverist/projects/gcf-core-rust`
+
 The goal is to treat the underlying Rust library as a python package, and to expose the functionality of the Rust library in a pythonic way.
 
 

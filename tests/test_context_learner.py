@@ -1,5 +1,6 @@
 """Tests for ContextLearner class."""
 
+
 from gnomics import BitArray, ContextLearner
 
 
@@ -466,3 +467,5 @@ class TestContextLearnerRepr:
         assert "num_spc=8" in repr_str
         assert "num_dps=4" in repr_str
         assert "d_thresh=15" in repr_str
+
+
