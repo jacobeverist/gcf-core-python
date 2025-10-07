@@ -78,7 +78,7 @@ jobs:
     if: github.event_name == 'release' && github.event.action == 'published'
     environment:
       name: pypi
-      url: https://pypi.org/p/gcf-core-python-client
+      url: https://pypi.org/p/gnomics
     permissions:
       id-token: write
 

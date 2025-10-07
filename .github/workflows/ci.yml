@@ -57,7 +57,7 @@ jobs:
 
     - name: Type check
       run: |
-        uv run mypy python/gcf_core_python_client --strict
+        uv run mypy python/gnomics --strict
 
   lint:
     name: Lint
