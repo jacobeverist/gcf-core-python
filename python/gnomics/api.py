@@ -7,7 +7,7 @@ Note: PyO3 classes cannot be subclassed, so the base classes are re-exported
 directly from the Rust module. Use the factory functions for convenience.
 """
 
-from gcf_core_python_client._gcf_core import (
+from gnomics._core import (
     BitArray,
     BlockMemory,
     BlockOutput,

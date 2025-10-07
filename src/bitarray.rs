@@ -9,7 +9,7 @@ use pyo3::types::PyList;
 ///
 /// BitArray efficiently stores and manipulates binary patterns (vectors of 1s and 0s)
 /// using compact 32-bit word storage, providing 32× compression compared to byte arrays.
-#[pyclass(name = "BitArray", module = "gcf_core_python_client")]
+#[pyclass(name = "BitArray", module = "gnomics")]
 #[derive(Clone)]
 pub struct PyBitArray {
     inner: RustBitArray,

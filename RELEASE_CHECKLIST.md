@@ -1,11 +1,11 @@
 # Release Checklist
 
-This document outlines the steps to release a new version of gcf-core-python-client to PyPI.
+This document outlines the steps to release a new version of gnomics to PyPI.
 
 ## Pre-Release Checks
 
 - [ ] All tests pass (`uv run pytest -v`)
-- [ ] Type checking passes (`uv run mypy python/gcf_core_python_client --strict`)
+- [ ] Type checking passes (`uv run mypy python/gnomics --strict`)
 - [ ] Code is formatted (`uv run ruff format --check .`)
 - [ ] Linting passes (`uv run ruff check .`)
 - [ ] Documentation is up-to-date
@@ -24,8 +24,8 @@ uv run maturin build --release
 # Test wheel installation in clean environment
 python -m venv test_env
 source test_env/bin/activate  # or `test_env\Scripts\activate` on Windows
-pip install target/wheels/gcf_core_python_client-*.whl
-python -c "from gcf_core_python_client import BitArray; print('Import successful')"
+pip install target/wheels/gnomics-*.whl
+python -c "from gnomics import BitArray; print('Import successful')"
 deactivate
 rm -rf test_env
 ```
@@ -41,7 +41,7 @@ rm -rf test_env
    ```
 
 2. **Create GitHub Release**
-   - Go to https://github.com/jacobeverist/gcf-core-python-client/releases
+   - Go to https://github.com/jacobeverist/gcf-core-python/releases
    - Click "Draft a new release"
    - Select the tag you just created
    - Add release notes
@@ -77,8 +77,8 @@ rm -rf test_env
 
 ## Post-Release
 
-- [ ] Verify package on PyPI: https://pypi.org/project/gcf-core-python-client/
-- [ ] Test installation from PyPI: `pip install gcf-core-python-client`
+- [ ] Verify package on PyPI: https://pypi.org/project/gnomics/
+- [ ] Test installation from PyPI: `pip install gnomics`
 - [ ] Update documentation if needed
 - [ ] Announce release (if applicable)
 
@@ -98,7 +98,7 @@ To enable automated PyPI publishing:
 1. Go to PyPI project settings
 2. Add GitHub Actions as a trusted publisher
 3. Configure:
-   - Repository: `jacobeverist/gcf-core-python-client`
+   - Repository: `jacobeverist/gcf-core-python`
    - Workflow: `release.yml`
    - Environment: `pypi`
 

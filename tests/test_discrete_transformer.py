@@ -1,6 +1,6 @@
 """Tests for DiscreteTransformer class."""
 
-from gcf_core_python_client import BitArray, DiscreteTransformer
+from gnomics import BitArray, DiscreteTransformer
 
 
 class TestDiscreteTransformerConstruction:

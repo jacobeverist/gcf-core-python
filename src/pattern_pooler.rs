@@ -9,7 +9,7 @@ use pyo3::prelude::*;
 /// PatternPooler creates sparse distributed representations through competitive
 /// winner-take-all learning. It learns to recognize patterns in input data
 /// without supervision, making it useful for feature extraction and clustering.
-#[pyclass(name = "PatternPooler", module = "gcf_core_python_client", unsendable)]
+#[pyclass(name = "PatternPooler", module = "gnomics", unsendable)]
 pub struct PyPatternPooler {
     inner: RustPatternPooler,
 }

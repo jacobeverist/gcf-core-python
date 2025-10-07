@@ -9,7 +9,7 @@ use pyo3::prelude::*;
 /// BlockMemory implements biologically-inspired learning through "dendrites"
 /// with multiple "receptors" that have adjustable permanence values (0-99).
 /// Learning strengthens matching connections and weakens non-matching ones.
-#[pyclass(name = "BlockMemory", module = "gcf_core_python_client")]
+#[pyclass(name = "BlockMemory", module = "gnomics")]
 pub struct PyBlockMemory {
     inner: RustBlockMemory,
 }

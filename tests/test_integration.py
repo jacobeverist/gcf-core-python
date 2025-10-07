@@ -1,6 +1,6 @@
 """Integration tests for GCF block pipelines."""
 
-from gcf_core_python_client.api import (
+from gnomics.api import (
     BitArray,
     create_category_encoder,
     create_classifier,

@@ -3,7 +3,7 @@ requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
 
 [project]
-name = "gcf-core-python-client"
+name = "gnomics"
 version = "0.1.0"
 description = "Python bindings for the Gnomic Computing Framework (GCF) - a high-performance computational neuroscience library"
 readme = "README.md"
@@ -33,6 +33,7 @@ classifiers = [
 ]
 dependencies = [
     "numpy>=1.20.0",
+    "pytest-benchmark>=4.0.0",
 ]
 
 [project.optional-dependencies]
@@ -46,14 +47,14 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/jacobeverist/gcf-core-python-client"
-Repository = "https://github.com/jacobeverist/gcf-core-python-client"
-"Bug Tracker" = "https://github.com/jacobeverist/gcf-core-python-client/issues"
+Homepage = "https://github.com/jacobeverist/gcf-core-python"
+Repository = "https://github.com/jacobeverist/gcf-core-python"
+"Bug Tracker" = "https://github.com/jacobeverist/gcf-core-python/issues"
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
 python-source = "python"
-module-name = "gcf_core_python_client._gcf_core"
+module-name = "gnomics._core"
 
 [tool.ruff]
 line-length = 100

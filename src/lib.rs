@@ -22,7 +22,7 @@ use pyo3::prelude::*;
 
 /// Python bindings for the Gnomic Computing Framework (GCF)
 #[pymodule]
-fn _gcf_core(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn _core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
     m.add_class::<PyBitArray>()?;
     m.add_class::<PyBlockOutput>()?;

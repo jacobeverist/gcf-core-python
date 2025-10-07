@@ -1,6 +1,6 @@
 """Tests for PatternPooler class."""
 
-from gcf_core_python_client import BitArray, PatternPooler
+from gnomics import BitArray, PatternPooler
 
 
 class TestPatternPoolerConstruction:

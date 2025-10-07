@@ -19,15 +19,15 @@ The Gnomic Computing Framework is a machine learning library inspired by HTM and
 ## Installation
 
 ```bash
-pip install gcf-core-python-client
+pip install gnomics
 ```
 
 ### From Source
 
 ```bash
 # Clone the repository
-git clone https://github.com/jacobeverist/gcf-core-python-client.git
-cd gcf-core-python-client
+git clone https://github.com/jacobeverist/gcf-core-python.git
+cd gcf-core-python
 
 # Install with uv
 uv sync
@@ -43,7 +43,7 @@ maturin develop
 ### Encoding Scalar Values
 
 ```python
-from gcf_core_python_client.api import create_scalar_encoder
+from gnomics.api import create_scalar_encoder
 
 # Create encoder for values 0-100
 encoder = create_scalar_encoder(min_value=0.0, max_value=100.0)
@@ -59,7 +59,7 @@ print(f"Encoded {encoded.num_set()} active bits")
 ### Pattern Classification
 
 ```python
-from gcf_core_python_client.api import create_scalar_encoder, create_classifier
+from gnomics.api import create_scalar_encoder, create_classifier
 
 # Create encoder and classifier
 encoder = create_scalar_encoder(min_value=0.0, max_value=100.0)
@@ -99,7 +99,7 @@ print(f"Probabilities: {classifier.get_probabilities()}")
 High-performance sparse binary array with 32x compression.
 
 ```python
-from gcf_core_python_client import BitArray
+from gnomics import BitArray
 
 ba = BitArray(1000)
 ba.set_acts([10, 20, 30, 40, 50])  # Set active indices
@@ -110,14 +110,14 @@ print(f"Active bits: {ba.num_set()}")
 
 **ScalarTransformer**: Encodes continuous values with semantic similarity
 ```python
-from gcf_core_python_client.api import create_scalar_encoder
+from gnomics.api import create_scalar_encoder
 
 encoder = create_scalar_encoder(min_value=0.0, max_value=100.0, num_segments=20)
 ```
 
 **DiscreteTransformer**: Encodes categorical values with zero overlap
 ```python
-from gcf_core_python_client.api import create_category_encoder
+from gnomics.api import create_category_encoder
 
 encoder = create_category_encoder(num_categories=10)
 ```
@@ -126,21 +126,21 @@ encoder = create_category_encoder(num_categories=10)
 
 **PatternPooler**: Unsupervised learning via competitive winner-take-all
 ```python
-from gcf_core_python_client.api import create_pooler
+from gnomics.api import create_pooler
 
 pooler = create_pooler(num_statelets=200, active_statelets=20)
 ```
 
 **PatternClassifier**: Supervised multi-class classification
 ```python
-from gcf_core_python_client.api import create_classifier
+from gnomics.api import create_classifier
 
 classifier = create_classifier(num_labels=5, num_statelets=150, active_statelets=15)
 ```
 
 **ContextLearner**: Temporal pattern recognition with anomaly detection
 ```python
-from gcf_core_python_client.api import create_temporal_learner
+from gnomics.api import create_temporal_learner
 
 learner = create_temporal_learner(num_columns=100)
 ```
@@ -163,7 +163,7 @@ Includes:
 Full mypy compatibility with complete type stubs:
 
 ```bash
-uv run mypy python/gcf_core_python_client --strict
+uv run mypy python/gnomics --strict
 ```
 
 ## Development
@@ -188,16 +188,16 @@ uv run maturin develop
 uv run pytest
 
 # Type check
-uv run mypy python/gcf_core_python_client --strict
+uv run mypy python/gnomics --strict
 ```
 
 ## Project Structure
 
 ```
-gcf-core-python-client/
+gcf-core-python/
 ├── src/              # Rust source code (PyO3 bindings)
 ├── python/           # Python package code
-│   └── gcf_core_python_client/
+│   └── gnomics/
 ├── tests/            # Python tests
 ├── Cargo.toml        # Rust dependencies
 └── pyproject.toml    # Python project configuration
@@ -210,4 +210,4 @@ MIT
 ## Links
 
 - [GCF Rust Library](https://github.com/jacobeverist/gcf-core-rust)
-- [Documentation](https://github.com/jacobeverist/gcf-core-python-client)
+- [Documentation](https://github.com/jacobeverist/gcf-core-python)

@@ -1,6 +1,6 @@
 """Tests for BlockOutput class."""
 
-from gcf_core_python_client import BitArray, BlockOutput
+from gnomics import BitArray, BlockOutput
 
 
 class TestBlockOutputConstruction:

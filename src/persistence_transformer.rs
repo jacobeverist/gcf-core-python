@@ -9,7 +9,7 @@ use pyo3::prelude::*;
 /// PersistenceTransformer tracks how long a value remains relatively unchanged,
 /// encoding the persistence duration as a sparse distributed representation.
 /// This enables downstream blocks to recognize temporal patterns and stability.
-#[pyclass(name = "PersistenceTransformer", module = "gcf_core_python_client")]
+#[pyclass(name = "PersistenceTransformer", module = "gnomics")]
 pub struct PyPersistenceTransformer {
     inner: RustPersistenceTransformer,
 }

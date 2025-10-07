@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-`gcf-core-python-client` is a Python client library project using Python 3.13+. The project uses `uv` for dependency management and virtual environment handling.
+`gnomics` is a Python client library project using Python 3.13+. The project uses `uv` for dependency management and virtual environment handling.
 
 ## Goal
 
@@ -51,7 +51,7 @@ uv run pytest tests/test_specific.py
 uv run pytest -v
 
 # Run tests with coverage
-uv run pytest --cov=gcf_core_python_client
+uv run pytest --cov=gnomics
 ```
 
 ### Linting and Formatting
@@ -77,7 +77,7 @@ uv run mypy python/
 
 This is a client library project. When developing:
 
-- Follow the typical Python package structure with source code in a dedicated package directory (e.g., `src/gcf_core_python_client/` or `gcf_core_python_client/`)
+- Follow the typical Python package structure with source code in a dedicated package directory (e.g., `src/gnomics/` or `gnomics/`)
 - Separate client implementation, models/schemas, and utilities into distinct modules
 - Include comprehensive type hints for all public APIs
 - Write unit tests in a `tests/` directory mirroring the source structure

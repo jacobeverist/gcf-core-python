@@ -1,11 +1,11 @@
 [package]
-name = "gcf-core-python-client"
+name = "gnomics"
 version = "0.1.0"
 edition = "2021"
 rust-version = "1.63"
 
 [lib]
-name = "_gcf_core"
+name = "_core"
 crate-type = ["cdylib"]
 
 [dependencies]

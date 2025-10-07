@@ -2,7 +2,7 @@
 
 import numpy as np
 import pytest
-from gcf_core_python_client import BitArray
+from gnomics import BitArray
 
 
 class TestBitArrayConstruction:

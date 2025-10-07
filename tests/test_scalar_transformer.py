@@ -1,6 +1,6 @@
 """Tests for ScalarTransformer class."""
 
-from gcf_core_python_client import BitArray, ScalarTransformer
+from gnomics import BitArray, ScalarTransformer
 
 
 class TestScalarTransformerConstruction:

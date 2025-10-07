@@ -10,7 +10,7 @@ use pyo3::prelude::*;
 /// it to predict inputs based on context and detect anomalies when inputs
 /// appear in unexpected contexts. It's useful for sequence learning,
 /// contextual disambiguation, and anomaly detection.
-#[pyclass(name = "ContextLearner", module = "gcf_core_python_client", unsendable)]
+#[pyclass(name = "ContextLearner", module = "gnomics", unsendable)]
 pub struct PyContextLearner {
     inner: RustContextLearner,
 }

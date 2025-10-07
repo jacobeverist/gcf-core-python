@@ -9,7 +9,7 @@ use pyo3::prelude::*;
 /// PatternClassifier learns to classify input patterns into discrete categories
 /// through supervised learning. It produces probability distributions over
 /// class labels and can predict the most likely label for new inputs.
-#[pyclass(name = "PatternClassifier", module = "gcf_core_python_client", unsendable)]
+#[pyclass(name = "PatternClassifier", module = "gnomics", unsendable)]
 pub struct PyPatternClassifier {
     inner: RustPatternClassifier,
 }

@@ -1,6 +1,6 @@
 """Tests for BlockMemory class."""
 
-from gcf_core_python_client import BitArray, BlockMemory
+from gnomics import BitArray, BlockMemory
 
 
 class TestBlockMemoryConstruction:

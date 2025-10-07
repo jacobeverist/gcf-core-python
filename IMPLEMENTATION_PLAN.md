@@ -1,4 +1,4 @@
-# Implementation Plan for gcf-core-python-client
+# Implementation Plan for gcf-core-python
 
 ## Project Overview
 
@@ -160,7 +160,7 @@ All 9 phases have been successfully implemented:
 - Created LICENSE file (MIT)
 - Created MANIFEST.in for source distribution
 - Created CONTRIBUTING.md with development guidelines
-- Package ready for `pip install gcf-core-python-client`
+- Package ready for `pip install gnomics`
 
 ## Architectural Decisions to Make
 

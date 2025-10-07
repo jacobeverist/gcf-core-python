@@ -3,8 +3,8 @@
 from hypothesis import given
 from hypothesis import strategies as st
 
-from gcf_core_python_client import BitArray
-from gcf_core_python_client.api import (
+from gnomics import BitArray
+from gnomics.api import (
     create_category_encoder,
     create_classifier,
     create_pooler,

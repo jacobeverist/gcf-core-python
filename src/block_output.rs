@@ -8,7 +8,7 @@ use pyo3::prelude::*;
 ///
 /// BlockOutput maintains a circular buffer of historical states and efficiently
 /// tracks when outputs change, enabling optimizations in downstream blocks.
-#[pyclass(name = "BlockOutput", module = "gcf_core_python_client")]
+#[pyclass(name = "BlockOutput", module = "gnomics")]
 pub struct PyBlockOutput {
     inner: RustBlockOutput,
 }

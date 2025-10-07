@@ -6,8 +6,8 @@ Thank you for your interest in contributing to the GCF Core Python Client!
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/jacobeverist/gcf-core-python-client.git
-   cd gcf-core-python-client
+   git clone https://github.com/jacobeverist/gcf-core-python.git
+   cd gcf-core-python
    ```
 
 2. **Install dependencies**
@@ -36,9 +36,9 @@ Thank you for your interest in contributing to the GCF Core Python Client!
 
 2. Make your changes in the appropriate files:
    - **Rust bindings**: `src/*.rs`
-   - **Python code**: `python/gcf_core_python_client/*.py`
+   - **Python code**: `python/gnomics/*.py`
    - **Tests**: `tests/test_*.py`
-   - **Type stubs**: `python/gcf_core_python_client/_gcf_core.pyi`
+   - **Type stubs**: `python/gnomics/_gcf_core.pyi`
 
 3. Rebuild after Rust changes
    ```bash
@@ -65,7 +65,7 @@ uv run pytest tests/test_properties.py --hypothesis-show-statistics
 ### Type Checking
 
 ```bash
-uv run mypy python/gcf_core_python_client --strict
+uv run mypy python/gnomics --strict
 ```
 
 ### Code Quality
@@ -93,7 +93,7 @@ uv run ruff check --fix .
 4. **Run all checks**:
    ```bash
    uv run pytest -v
-   uv run mypy python/gcf_core_python_client --strict
+   uv run mypy python/gnomics --strict
    uv run ruff format --check .
    uv run ruff check .
    ```
@@ -106,7 +106,7 @@ When wrapping a new Rust class:
 
 1. **Create Rust wrapper** in `src/`:
    ```rust
-   #[pyclass(name = "MyClass", module = "gcf_core_python_client", unsendable)]
+   #[pyclass(name = "MyClass", module = "gnomics", unsendable)]
    pub struct PyMyClass {
        inner: RustMyClass,
    }
@@ -120,13 +120,13 @@ When wrapping a new Rust class:
    m.add_class::<PyMyClass>()?;
    ```
 
-3. **Add type stubs** in `python/gcf_core_python_client/_gcf_core.pyi`
+3. **Add type stubs** in `python/gnomics/_gcf_core.pyi`
 
-4. **Export** in `python/gcf_core_python_client/__init__.py`
+4. **Export** in `python/gnomics/__init__.py`
 
 5. **Write tests** in `tests/test_my_class.py`
 
-6. **Add factory function** (optional) in `python/gcf_core_python_client/api.py`
+6. **Add factory function** (optional) in `python/gnomics/api.py`
 
 ## Testing Guidelines
 

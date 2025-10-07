@@ -1,6 +1,6 @@
 """Tests for PersistenceTransformer class."""
 
-from gcf_core_python_client import BitArray, PersistenceTransformer
+from gnomics import BitArray, PersistenceTransformer
 
 
 class TestPersistenceTransformerConstruction:

@@ -1,6 +1,6 @@
 """Tests for ContextLearner class."""
 
-from gcf_core_python_client import BitArray, ContextLearner
+from gnomics import BitArray, ContextLearner
 
 
 class TestContextLearnerConstruction:

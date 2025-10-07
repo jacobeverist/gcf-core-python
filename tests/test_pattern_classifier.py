@@ -1,6 +1,6 @@
 """Tests for PatternClassifier class."""
 
-from gcf_core_python_client import BitArray, PatternClassifier
+from gnomics import BitArray, PatternClassifier
 
 
 class TestPatternClassifierConstruction:
