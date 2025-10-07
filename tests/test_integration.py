@@ -29,7 +29,8 @@ class TestScalarEncoderPipeline:
             encoder.execute(learn_flag=False)
             encoded = encoder.output.state()
 
-            pooler.execute(encoded, learn_flag=True)
+            pooler.input.set_state(encoded)
+            pooler.execute(learn_flag=True)
             pooled = pooler.output.state()
 
             assert isinstance(pooled, BitArray)
@@ -65,7 +66,8 @@ class TestScalarEncoderPipeline:
             encoded = encoder.output.state()
 
             classifier.set_label(label)
-            classifier.execute(encoded, learn_flag=True)
+            classifier.input.set_state(encoded)
+            classifier.execute(learn_flag=True)
 
         # Test prediction
         encoder.set_value(25.0)
@@ -97,7 +99,8 @@ class TestCategoryEncoderPipeline:
             encoder.execute(learn_flag=False)
             encoded = encoder.output.state()
 
-            pooler.execute(encoded, learn_flag=True)
+            pooler.input.set_state(encoded)
+            pooler.execute(learn_flag=True)
             pooled = pooler.output.state()
 
             assert isinstance(pooled, BitArray)
@@ -133,7 +136,9 @@ class TestContextLearningPipeline:
             current_encoded = encoder.output.state()
 
             # Learn context pattern (current input, previous as context)
-            learner.execute(current_encoded, prev_encoded, learn_flag=True)
+            learner.input.set_state(current_encoded)
+            learner.context.set_state(prev_encoded)
+            learner.execute(learn_flag=True)
 
             # Get prediction and anomaly
             prediction = learner.output.state()
@@ -179,19 +184,22 @@ class TestMultiStageClassificationPipeline:
             encoded = encoder.output.state()
 
             # Pool
-            pooler.execute(encoded, learn_flag=True)
+            pooler.input.set_state(encoded)
+            pooler.execute(learn_flag=True)
             pooled = pooler.output.state()
 
             # Classify
             classifier.set_label(label)
-            classifier.execute(pooled, learn_flag=True)
+            classifier.input.set_state(pooled)
+            classifier.execute(learn_flag=True)
 
         # Test prediction
         encoder.set_value(80.0)
         encoder.execute(learn_flag=False)
         encoded = encoder.output.state()
 
-        pooler.execute(encoded, learn_flag=False)
+        pooler.input.set_state(encoded)
+        pooler.execute(learn_flag=False)
         pooled = pooler.output.state()
 
         classifier.compute(pooled)
@@ -227,7 +235,9 @@ class TestSequenceLearningPipeline:
             current_encoded = encoder.output.state()
 
             # Learn
-            learner.execute(current_encoded, prev_encoded, learn_flag=True)
+            learner.input.set_state(current_encoded)
+            learner.context.set_state(prev_encoded)
+            learner.execute(learn_flag=True)
 
             # Check anomaly (should decrease as pattern is learned)
             anomaly = learner.get_anomaly_score()
@@ -275,17 +285,20 @@ class TestOutputHistoryPipeline:
         # First execution
         encoder.set_value(50.0)
         encoder.execute(learn_flag=False)
-        pooler.execute(encoder.output.state(), learn_flag=True)
+        pooler.input.set_state(encoder.output.state())
+        pooler.execute(learn_flag=True)
 
         # Second execution with same value
         encoder.set_value(50.0)
         encoder.execute(learn_flag=False)
-        pooler.execute(encoder.output.state(), learn_flag=False)
+        pooler.input.set_state(encoder.output.state())
+        pooler.execute(learn_flag=False)
 
         # Third execution with different value
         encoder.set_value(75.0)
         encoder.execute(learn_flag=False)
-        pooler.execute(encoder.output.state(), learn_flag=False)
+        pooler.input.set_state(encoder.output.state())
+        pooler.execute(learn_flag=False)
 
         # Check change detection
         changed = pooler.has_changed()

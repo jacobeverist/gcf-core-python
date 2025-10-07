@@ -25,7 +25,8 @@ class TestSequenceLearnerOutputSparsity:
         input_pattern = BitArray(10)
         input_pattern.set_acts([0, 1, 2, 3, 4])
 
-        learner.execute(input_pattern, learn_flag=True)
+        learner.input.set_state(input_pattern)
+        learner.execute(learn_flag=True)
         output = learner.output.state()
 
         num_active = output.num_set()
@@ -64,7 +65,8 @@ class TestSequenceLearnerComplexSequences:
         # Train on sequence multiple times
         for _ in range(20):
             for pattern in sequence:
-                learner.execute(pattern, learn_flag=True)
+                learner.input.set_state(pattern)
+                learner.execute(learn_flag=True)
 
         # Verify that historical count increases
         count = learner.get_historical_count()
@@ -98,7 +100,8 @@ class TestSequenceLearnerComplexSequences:
         # Train multiple full cycles
         for _ in range(20):
             for pattern in cycle:
-                learner.execute(pattern, learn_flag=True)
+                learner.input.set_state(pattern)
+                learner.execute(learn_flag=True)
 
         final_count = learner.get_historical_count()
         assert final_count > initial_count, "Should have learned the cyclic pattern"

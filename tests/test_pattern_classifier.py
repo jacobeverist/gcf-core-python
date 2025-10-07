@@ -231,7 +231,8 @@ class TestPatternClassifierLearning:
         input_pattern.set_acts([1, 5, 10, 15, 20])
 
         classifier.set_label(1)
-        classifier.execute(input_pattern, learn_flag=True)
+        classifier.input.set_state(input_pattern)
+        classifier.execute(learn_flag=True)
         output = classifier.output.state()
 
         assert isinstance(output, BitArray)
@@ -259,7 +260,8 @@ class TestPatternClassifierOperations:
 
         input_pattern = BitArray(256)
         input_pattern.set_acts([1, 5, 10])
-        classifier.execute(input_pattern, learn_flag=False)
+        classifier.input.set_state(input_pattern)
+        classifier.execute(learn_flag=False)
 
         classifier.clear()
 

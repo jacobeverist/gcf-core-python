@@ -125,7 +125,8 @@ class TestPatternPoolerLearning:
         input_pattern = BitArray(256)
         input_pattern.set_acts([1, 5, 10, 15, 20])
 
-        pooler.execute(input_pattern, learn_flag=True)
+        pooler.input.set_state(input_pattern)
+        pooler.execute(learn_flag=True)
         output = pooler.output.state()
 
         assert isinstance(output, BitArray)
@@ -153,7 +154,8 @@ class TestPatternPoolerHistory:
         input_pattern = BitArray(256)
         input_pattern.set_acts([1, 5, 10])
 
-        pooler.execute(input_pattern, learn_flag=False)
+        pooler.input.set_state(input_pattern)
+        pooler.execute(learn_flag=False)
 
         # Access current output
         current = pooler.output_at(0)
@@ -185,7 +187,8 @@ class TestPatternPoolerOperations:
 
         input_pattern = BitArray(256)
         input_pattern.set_acts([1, 5, 10])
-        pooler.execute(input_pattern, learn_flag=False)
+        pooler.input.set_state(input_pattern)
+        pooler.execute(learn_flag=False)
 
         pooler.clear()
 

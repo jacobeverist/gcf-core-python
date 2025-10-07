@@ -306,6 +306,16 @@ class BlockInput:
         """
         ...
 
+    def set_state(self, state: BitArray) -> None:
+        """Set the input state directly.
+
+        This is useful for testing or when not using block connections.
+
+        Args:
+            state: BitArray to set as the input state
+        """
+        ...
+
     def memory_usage(self) -> int:
         """Estimate memory usage in bytes.
 

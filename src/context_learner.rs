@@ -193,19 +193,42 @@ impl PyContextLearner {
         self.inner.learn();
     }
 
-    /// Execute full pipeline: compute and optionally learn.
+    /// Execute the full computation pipeline.
+    ///
+    /// This performs: step() -> pull() -> compute() -> [learn()] -> store()
+    /// Input and context are automatically pulled from connected BlockInputs.
     ///
     /// Args:
-    ///     input: Input BitArray pattern (active columns)
-    ///     context: Context BitArray pattern
     ///     learn_flag: Whether to perform learning
-    pub fn execute(&mut self, input: &PyBitArray, context: &PyBitArray, learn_flag: bool) {
-        self.compute(input, context);
-        if learn_flag {
-            self.learn(input, context);
+    pub fn execute(&mut self, py: Python, learn_flag: bool) -> PyResult<()> {
+        // Sync from py_input if it exists
+        if let Some(ref py_input) = self.py_input {
+            let mut py_input_mut = py_input.borrow_mut(py);
+            std::mem::swap(&mut self.inner.input, &mut py_input_mut.inner);
         }
-        self.inner.store();
-        self.inner.step();
+
+        // Sync from py_context if it exists
+        if let Some(ref py_context) = self.py_context {
+            let mut py_context_mut = py_context.borrow_mut(py);
+            std::mem::swap(&mut self.inner.context, &mut py_context_mut.inner);
+        }
+
+        // Execute using the Rust Block trait's execute which handles pull()
+        let result = self.inner.execute(learn_flag).map_err(crate::error::gnomics_error_to_pyerr);
+
+        // Swap back to keep py_input in sync
+        if let Some(ref py_input) = self.py_input {
+            let mut py_input_mut = py_input.borrow_mut(py);
+            std::mem::swap(&mut self.inner.input, &mut py_input_mut.inner);
+        }
+
+        // Swap back to keep py_context in sync
+        if let Some(ref py_context) = self.py_context {
+            let mut py_context_mut = py_context.borrow_mut(py);
+            std::mem::swap(&mut self.inner.context, &mut py_context_mut.inner);
+        }
+
+        result
     }
 
     /// Get the anomaly score for the current prediction.

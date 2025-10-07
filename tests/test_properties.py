@@ -195,7 +195,8 @@ class TestPoolerProperties:
         input_pattern = BitArray(256)
         input_pattern.set_acts([1, 5, 10, 15, 20])
 
-        pooler.execute(input_pattern, learn_flag=False)
+        pooler.input.set_state(input_pattern)
+        pooler.execute(learn_flag=False)
         output = pooler.output.state()
 
         # Output should not exceed active_statelets
@@ -209,7 +210,8 @@ class TestPoolerProperties:
 
         input_pattern = BitArray(128)
         input_pattern.set_acts([1, 5, 10])
-        pooler.execute(input_pattern, learn_flag=True)
+        pooler.input.set_state(input_pattern)
+        pooler.execute(learn_flag=True)
 
         pooler.clear()
         output = pooler.output.state()
@@ -243,7 +245,8 @@ class TestClassifierProperties:
         input_pattern = BitArray(128)
         input_pattern.set_acts([1, 5, 10, 15, 20])
         classifier.set_label(0)
-        classifier.execute(input_pattern, learn_flag=True)
+        classifier.input.set_state(input_pattern)
+        classifier.execute(learn_flag=True)
 
         # Now compute and check probabilities
         classifier.compute(input_pattern)

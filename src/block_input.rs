@@ -107,6 +107,16 @@ impl PyBlockInput {
         PyBitArray::from_rust(self.inner.state.clone())
     }
 
+    /// Set the input state directly.
+    ///
+    /// This is useful for testing or when not using block connections.
+    ///
+    /// Args:
+    ///     state: BitArray to set as the input state
+    pub fn set_state(&mut self, state: &PyBitArray) {
+        self.inner.state = state.as_rust().clone();
+    }
+
     /// Estimate memory usage in bytes.
     ///
     /// Returns:

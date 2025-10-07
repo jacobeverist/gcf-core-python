@@ -1,10 +1,7 @@
 # ==============================================================================
 # online_learning_scalar_sequence_anomalies.py
 # ==============================================================================
-from mypy.server.mergecheck import path_to_str
-
 from gnomics import BitArray, ScalarTransformer, SequenceLearner
-from icecream import ic
 
 # Scalar Transformer
 transformer = ScalarTransformer(
@@ -70,8 +67,8 @@ for i in range(len(values)):
 
     encoder_pattern = transformer.output.state()
 
-    # Compute the sequence learner
-    learner.execute(transformer.output.state(), True)
+    # Compute the sequence learner (input is pulled automatically from connected transformer)
+    learner.execute(True)
 
     # view the computational state of the sequence learner
     learner_pattern = learner.output.state()
@@ -82,7 +79,7 @@ for i in range(len(values)):
 
     # Get anomaly score
     score = learner.get_anomaly_score()
-    # print(values[i], score)
+    print(values[i], score)
 
     scores.append(score)
     patterns.append(learner_pattern)

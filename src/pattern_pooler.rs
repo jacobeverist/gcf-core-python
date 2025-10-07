@@ -151,18 +151,30 @@ impl PyPatternPooler {
         self.inner.learn();
     }
 
-    /// Execute full pipeline: compute and optionally learn.
+    /// Execute the full computation pipeline.
+    ///
+    /// This performs: step() -> pull() -> compute() -> [learn()] -> store()
+    /// Input is automatically pulled from connected BlockInput.
     ///
     /// Args:
-    ///     input: Input BitArray pattern
     ///     learn_flag: Whether to perform learning
-    pub fn execute(&mut self, input: &PyBitArray, learn_flag: bool) {
-        self.compute(input);
-        if learn_flag {
-            self.learn(input);
+    pub fn execute(&mut self, py: Python, learn_flag: bool) -> PyResult<()> {
+        // Sync from py_input if it exists
+        if let Some(ref py_input) = self.py_input {
+            let mut py_input_mut = py_input.borrow_mut(py);
+            std::mem::swap(&mut self.inner.input, &mut py_input_mut.inner);
         }
-        self.inner.store();
-        self.inner.step();
+
+        // Execute using the Rust Block trait's execute which handles pull()
+        let result = self.inner.execute(learn_flag).map_err(crate::error::gnomics_error_to_pyerr);
+
+        // Swap back to keep py_input in sync
+        if let Some(ref py_input) = self.py_input {
+            let mut py_input_mut = py_input.borrow_mut(py);
+            std::mem::swap(&mut self.inner.input, &mut py_input_mut.inner);
+        }
+
+        result
     }
 
     /// Get the output BlockOutput object for connecting to other blocks.

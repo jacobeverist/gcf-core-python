@@ -169,7 +169,9 @@ class TestContextLearnerLearning:
         context_pattern = BitArray(200)
         context_pattern.set_acts([5, 15, 25, 35, 45])
 
-        learner.execute(input_pattern, context_pattern, learn_flag=True)
+        learner.input.set_state(input_pattern)
+        learner.context.set_state(context_pattern)
+        learner.execute(learn_flag=True)
         output = learner.output.state()
 
         assert isinstance(output, BitArray)
@@ -196,7 +198,9 @@ class TestContextLearnerLearning:
         context_pattern = BitArray(200)
         context_pattern.set_acts([5, 15, 25])
 
-        learner.execute(input_pattern, context_pattern, learn_flag=False)
+        learner.input.set_state(input_pattern)
+        learner.context.set_state(context_pattern)
+        learner.execute(learn_flag=False)
         output = learner.output.state()
 
         assert isinstance(output, BitArray)
@@ -261,7 +265,9 @@ class TestContextLearnerAnomaly:
 
         # Learn the pattern multiple times
         for _ in range(10):
-            learner.execute(input_pattern, context_pattern, learn_flag=True)
+            learner.input.set_state(input_pattern)
+            learner.context.set_state(context_pattern)
+            learner.execute(learn_flag=True)
 
         # Compute again - anomaly should potentially decrease
         learner.compute(input_pattern, context_pattern)
@@ -321,7 +327,9 @@ class TestContextLearnerHistory:
             context_pattern = BitArray(100)
             context_pattern.set_acts([i * 10, i * 10 + 5, i * 10 + 10])
 
-            learner.execute(input_pattern, context_pattern, learn_flag=True)
+            learner.input.set_state(input_pattern)
+            learner.context.set_state(context_pattern)
+            learner.execute(learn_flag=True)
 
         final_count = learner.get_historical_count()
 
@@ -351,7 +359,9 @@ class TestContextLearnerHistory:
         context_pattern = BitArray(100)
         context_pattern.set_acts([10, 20, 30])
 
-        learner.execute(input_pattern, context_pattern, learn_flag=False)
+        learner.input.set_state(input_pattern)
+        learner.context.set_state(context_pattern)
+        learner.execute(learn_flag=False)
 
         # Get current output
         output_current = learner.output_at(0)
@@ -385,7 +395,9 @@ class TestContextLearnerHistory:
         context_pattern = BitArray(100)
         context_pattern.set_acts([10, 20, 30])
 
-        learner.execute(input_pattern, context_pattern, learn_flag=False)
+        learner.input.set_state(input_pattern)
+        learner.context.set_state(context_pattern)
+        learner.execute(learn_flag=False)
 
         # Check if output changed
         changed = learner.has_changed()
@@ -417,7 +429,9 @@ class TestContextLearnerOperations:
         context_pattern = BitArray(100)
         context_pattern.set_acts([10, 20, 30])
 
-        learner.execute(input_pattern, context_pattern, learn_flag=True)
+        learner.input.set_state(input_pattern)
+        learner.context.set_state(context_pattern)
+        learner.execute(learn_flag=True)
 
         learner.clear()
 

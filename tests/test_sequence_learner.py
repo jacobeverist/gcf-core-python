@@ -175,7 +175,8 @@ class TestSequenceLearnerLearning:
         input_pattern = BitArray(100)
         input_pattern.set_acts([1, 5, 10, 15, 20])
 
-        learner.execute(input_pattern, learn_flag=True)
+        learner.input.set_state(input_pattern)
+        learner.execute(learn_flag=True)
         output = learner.output.state()
 
         assert isinstance(output, BitArray)
@@ -199,7 +200,8 @@ class TestSequenceLearnerLearning:
         input_pattern = BitArray(100)
         input_pattern.set_acts([1, 5, 10])
 
-        learner.execute(input_pattern, learn_flag=False)
+        learner.input.set_state(input_pattern)
+        learner.execute(learn_flag=False)
         output = learner.output.state()
 
         assert isinstance(output, BitArray)
@@ -232,9 +234,12 @@ class TestSequenceLearnerLearning:
 
         # Train the sequence multiple times
         for _ in range(5):
-            learner.execute(pattern_a, learn_flag=True)
-            learner.execute(pattern_b, learn_flag=True)
-            learner.execute(pattern_c, learn_flag=True)
+            learner.input.set_state(pattern_a)
+            learner.execute(learn_flag=True)
+            learner.input.set_state(pattern_b)
+            learner.execute(learn_flag=True)
+            learner.input.set_state(pattern_c)
+            learner.execute(learn_flag=True)
 
         # Should complete without error
         assert learner.num_c() == 50
@@ -296,11 +301,14 @@ class TestSequenceLearnerAnomaly:
 
         # Learn the sequence multiple times
         for _ in range(10):
-            learner.execute(pattern_a, learn_flag=True)
-            learner.execute(pattern_b, learn_flag=True)
+            learner.input.set_state(pattern_a)
+            learner.execute(learn_flag=True)
+            learner.input.set_state(pattern_b)
+            learner.execute(learn_flag=True)
 
         # Compute again with learned pattern
-        learner.execute(pattern_a, learn_flag=False)
+        learner.input.set_state(pattern_a)
+        learner.execute(learn_flag=False)
         learner.compute(pattern_b)
         final_score = learner.get_anomaly_score()
 
@@ -355,7 +363,8 @@ class TestSequenceLearnerHistory:
             input_pattern = BitArray(50)
             input_pattern.set_acts([i, i + 1, i + 2])
 
-            learner.execute(input_pattern, learn_flag=True)
+            learner.input.set_state(input_pattern)
+            learner.execute(learn_flag=True)
 
         final_count = learner.get_historical_count()
 
@@ -382,7 +391,8 @@ class TestSequenceLearnerHistory:
         input_pattern = BitArray(50)
         input_pattern.set_acts([1, 2, 3])
 
-        learner.execute(input_pattern, learn_flag=False)
+        learner.input.set_state(input_pattern)
+        learner.execute(learn_flag=False)
 
         # Get current output
         output_current = learner.output_at(0)
@@ -413,7 +423,8 @@ class TestSequenceLearnerHistory:
         input_pattern = BitArray(50)
         input_pattern.set_acts([1, 2, 3])
 
-        learner.execute(input_pattern, learn_flag=False)
+        learner.input.set_state(input_pattern)
+        learner.execute(learn_flag=False)
 
         # Check if output changed
         changed = learner.has_changed()
@@ -442,7 +453,8 @@ class TestSequenceLearnerOperations:
         input_pattern = BitArray(50)
         input_pattern.set_acts([1, 2, 3])
 
-        learner.execute(input_pattern, learn_flag=True)
+        learner.input.set_state(input_pattern)
+        learner.execute(learn_flag=True)
 
         learner.clear()
 
