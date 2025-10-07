@@ -38,7 +38,7 @@ Thank you for your interest in contributing to the GCF Core Python Client!
    - **Rust bindings**: `src/*.rs`
    - **Python code**: `python/gnomics/*.py`
    - **Tests**: `tests/test_*.py`
-   - **Type stubs**: `python/gnomics/_gcf_core.pyi`
+   - **Type stubs**: `python/gnomics/core.pyi`
 
 3. Rebuild after Rust changes
    ```bash
@@ -120,7 +120,7 @@ When wrapping a new Rust class:
    m.add_class::<PyMyClass>()?;
    ```
 
-3. **Add type stubs** in `python/gnomics/_gcf_core.pyi`
+3. **Add type stubs** in `python/gnomics/core.pyi`
 
 4. **Export** in `python/gnomics/__init__.py`
 

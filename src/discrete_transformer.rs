@@ -9,7 +9,7 @@ use pyo3::prelude::*;
 /// DiscreteTransformer converts discrete categories into binary patterns with
 /// zero overlap between different categories. This ensures each category has
 /// a unique representation while maintaining the benefits of sparse encoding.
-#[pyclass(name = "DiscreteTransformer", module = "gnomics")]
+#[pyclass(name = "DiscreteTransformer", module = "gnomics.core")]
 pub struct PyDiscreteTransformer {
     inner: RustDiscreteTransformer,
 }

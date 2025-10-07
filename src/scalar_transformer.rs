@@ -10,7 +10,7 @@ use pyo3::prelude::*;
 /// semantically similar values have overlapping bit patterns. This enables
 /// downstream blocks to recognize similar values and generalize across
 /// continuous ranges.
-#[pyclass(name = "ScalarTransformer", module = "gnomics")]
+#[pyclass(name = "ScalarTransformer", module = "gnomics.core")]
 pub struct PyScalarTransformer {
     inner: RustScalarTransformer,
 }

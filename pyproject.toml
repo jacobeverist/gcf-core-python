@@ -54,7 +54,7 @@ Repository = "https://github.com/jacobeverist/gcf-core-python"
 [tool.maturin]
 features = ["pyo3/extension-module"]
 python-source = "python"
-module-name = "gnomics._core"
+module-name = "gnomics.core"
 
 [tool.ruff]
 line-length = 100

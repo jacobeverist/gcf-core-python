@@ -5,7 +5,7 @@ Python bindings for the GCF Rust library - a high-performance computational
 neuroscience framework for machine learning applications.
 """
 
-from gnomics._core import (
+from gnomics.core import (
     BitArray,
     BlockMemory,
     BlockOutput,
