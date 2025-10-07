@@ -3,14 +3,16 @@
 use crate::bitarray::PyBitArray;
 use gnomics::BlockOutput as RustBlockOutput;
 use pyo3::prelude::*;
+use std::cell::RefCell;
+use std::rc::Rc;
 
 /// Manages block outputs with history tracking and change detection.
 ///
 /// BlockOutput maintains a circular buffer of historical states and efficiently
 /// tracks when outputs change, enabling optimizations in downstream blocks.
-#[pyclass(name = "BlockOutput", module = "gnomics.core")]
+#[pyclass(name = "BlockOutput", module = "gnomics.core", unsendable)]
 pub struct PyBlockOutput {
-    inner: RustBlockOutput,
+    pub(crate) inner: Rc<RefCell<RustBlockOutput>>,
 }
 
 #[pymethods]
@@ -21,7 +23,7 @@ impl PyBlockOutput {
     #[new]
     pub fn new() -> Self {
         PyBlockOutput {
-            inner: RustBlockOutput::new(),
+            inner: Rc::new(RefCell::new(RustBlockOutput::new())),
         }
     }
 
@@ -31,12 +33,12 @@ impl PyBlockOutput {
     ///     num_t: Number of historical time steps to maintain (minimum 2)
     ///     num_b: Number of bits in the output state
     pub fn setup(&mut self, num_t: usize, num_b: usize) {
-        self.inner.setup(num_t, num_b);
+        self.inner.borrow_mut().setup(num_t, num_b);
     }
 
     /// Advance to the next time step in the circular buffer.
     pub fn step(&mut self) {
-        self.inner.step();
+        self.inner.borrow_mut().step();
     }
 
     /// Store the current state and detect if it has changed.
@@ -44,7 +46,7 @@ impl PyBlockOutput {
     /// This compares the current state with the previous state to set
     /// the internal change flag.
     pub fn store(&mut self) {
-        self.inner.store();
+        self.inner.borrow_mut().store();
     }
 
     /// Check if the output has changed in the current time step.
@@ -52,7 +54,7 @@ impl PyBlockOutput {
     /// Returns:
     ///     True if the current state differs from the previous state
     pub fn has_changed(&self) -> bool {
-        self.inner.has_changed()
+        self.inner.borrow().has_changed()
     }
 
     /// Check if the output changed at a specific time offset.
@@ -63,7 +65,7 @@ impl PyBlockOutput {
     /// Returns:
     ///     True if the state changed at that time
     pub fn has_changed_at(&self, time: usize) -> bool {
-        self.inner.has_changed_at(time)
+        self.inner.borrow().has_changed_at(time)
     }
 
     /// Get the current output state.
@@ -71,7 +73,7 @@ impl PyBlockOutput {
     /// Returns:
     ///     BitArray containing the current state
     pub fn state(&self) -> PyBitArray {
-        PyBitArray::from_rust(self.inner.state.clone())
+        PyBitArray::from_rust(self.inner.borrow().state.clone())
     }
 
     /// Set the current output state from a BitArray.
@@ -79,7 +81,7 @@ impl PyBlockOutput {
     /// Args:
     ///     bits: BitArray to set as the current state
     pub fn set_state(&mut self, bits: &PyBitArray) {
-        self.inner.state = bits.as_rust().clone();
+        self.inner.borrow_mut().state = bits.as_rust().clone();
     }
 
     /// Get the output state at a specific time offset.
@@ -90,7 +92,7 @@ impl PyBlockOutput {
     /// Returns:
     ///     BitArray containing the state at that time
     pub fn get_bitarray(&self, time: usize) -> PyBitArray {
-        PyBitArray::from_rust(self.inner.get_bitarray(time).clone())
+        PyBitArray::from_rust(self.inner.borrow().get_bitarray(time).clone())
     }
 
     /// Get the number of time steps in history.
@@ -98,7 +100,7 @@ impl PyBlockOutput {
     /// Returns:
     ///     Number of time steps
     pub fn num_t(&self) -> usize {
-        self.inner.num_t()
+        self.inner.borrow().num_t()
     }
 
     /// Get the unique output ID.
@@ -106,20 +108,21 @@ impl PyBlockOutput {
     /// Returns:
     ///     Output ID
     pub fn id(&self) -> u32 {
-        self.inner.id()
+        self.inner.borrow().id()
     }
 
     /// Clear all state to zeros.
     pub fn clear(&mut self) {
-        self.inner.clear();
+        self.inner.borrow_mut().clear();
     }
 
     fn __repr__(&self) -> String {
+        let inner = self.inner.borrow();
         format!(
             "BlockOutput(num_bits={}, num_t={}, changed={})",
-            self.inner.state.num_bits(),
-            self.inner.num_t(),
-            self.inner.has_changed()
+            inner.state.num_bits(),
+            inner.num_t(),
+            inner.has_changed()
         )
     }
 }

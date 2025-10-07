@@ -1,4 +1,5 @@
 mod bitarray;
+mod block_input;
 mod block_memory;
 mod block_output;
 mod context_learner;
@@ -11,6 +12,7 @@ mod scalar_transformer;
 mod sequence_learner;
 
 use bitarray::PyBitArray;
+use block_input::PyBlockInput;
 use block_memory::PyBlockMemory;
 use block_output::PyBlockOutput;
 use context_learner::PyContextLearner;
@@ -27,6 +29,7 @@ use pyo3::prelude::*;
 fn core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
     m.add_class::<PyBitArray>()?;
+    m.add_class::<PyBlockInput>()?;
     m.add_class::<PyBlockOutput>()?;
     m.add_class::<PyBlockMemory>()?;
     m.add_class::<PyScalarTransformer>()?;

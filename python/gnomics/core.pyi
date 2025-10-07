@@ -227,6 +227,95 @@ class BlockOutput:
 
     def __repr__(self) -> str: ...
 
+class BlockInput:
+    """Manages block inputs with lazy copying from child outputs.
+
+    BlockInput concatenates multiple child BlockOutputs into a single input
+    BitArray with lazy copying optimization - data is only copied from children
+    that have changed.
+    """
+
+    def __init__(self) -> None:
+        """Create a new BlockInput."""
+        ...
+
+    def add_child(self, child: BlockOutput, time: int) -> None:
+        """Add a child BlockOutput at a specific time offset.
+
+        Data is NOT copied during this call - only metadata is stored.
+        Actual copying happens during pull() and only for changed children.
+
+        Args:
+            child: BlockOutput to add as a child
+            time: Time offset (0=current, 1=previous, etc.)
+        """
+        ...
+
+    def pull(self) -> None:
+        """Pull data from child outputs (with lazy copying optimization).
+
+        Only copies data from children that have changed. Unchanged children
+        are skipped, providing significant performance benefits.
+        """
+        ...
+
+    def children_changed(self) -> bool:
+        """Check if any child has changed.
+
+        Returns immediately on first change found (short-circuit evaluation).
+        Enables downstream blocks to skip computation when no inputs changed.
+
+        Returns:
+            True if any child has changed
+        """
+        ...
+
+    def clear(self) -> None:
+        """Clear all bits in state to 0."""
+        ...
+
+    def num_children(self) -> int:
+        """Get number of children.
+
+        Returns:
+            Number of child outputs
+        """
+        ...
+
+    def num_bits(self) -> int:
+        """Get total number of bits in concatenated state.
+
+        Returns:
+            Total bits
+        """
+        ...
+
+    def id(self) -> int:
+        """Get unique input ID.
+
+        Returns:
+            Input ID
+        """
+        ...
+
+    def state(self) -> BitArray:
+        """Get the concatenated input state.
+
+        Returns:
+            BitArray containing the concatenated state
+        """
+        ...
+
+    def memory_usage(self) -> int:
+        """Estimate memory usage in bytes.
+
+        Returns:
+            Memory usage in bytes
+        """
+        ...
+
+    def __repr__(self) -> str: ...
+
 class BlockMemory:
     """Synaptic learning with permanence-based connections.
 
