@@ -14,6 +14,11 @@ This python project is to be a wrapper around the Rust library found in gcf-core
 
 The goal is to treat the underlying Rust library as a python package, and to expose the functionality of the Rust library in a pythonic way.
 
+## Tasks
+
+Fix the execute() methods for all the blocks so that they don't require an input pattern, but instead extract their input from the connected InputBlock
+
+
 
 
 ## Development Environment Setup
